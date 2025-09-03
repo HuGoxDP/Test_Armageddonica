@@ -6,17 +6,17 @@ namespace _Project.Scripts.Architecture
 {
     public class PointerEnterExitHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        public event EventHandler PointerEnter;
-        public event EventHandler PointerExit;
+        public event EventHandler<PointerEnterExitHandler> PointerEnter;
+        public event EventHandler<PointerEnterExitHandler> PointerExit;
         
         public void OnPointerEnter(PointerEventData eventData)
         {
-            PointerEnter?.Invoke(this, EventArgs.Empty);
+            PointerEnter?.Invoke(this, this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            PointerExit?.Invoke(this, EventArgs.Empty);
+            PointerExit?.Invoke(this, this);
         }
     }
 }
