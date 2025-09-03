@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b147f07d4bf94d87a531326a24b89efe, type: 3}
+  m_Name: u_Solder
+  m_EditorClassIdentifier: 
+  <CardName>k__BackingField: "\u0421\u043E\u043B\u0434\u0430\u0442"
+  <Description>k__BackingField: "\u042E\u043D\u0456\u0442 \u0431\u043B\u0438\u0436\u043D\u044C\u043E\u0433\u043E
+    \u0431\u043E\u044E, \u0447\u0438\u044F \u0441\u0438\u043B\u0430 \u0430\u0442\u0430\u043A\u0438
+    \u0437\u0440\u043E\u0441\u0442\u0430\u0454 \u043F\u0440\u043E\u043F\u043E\u0440\u0446\u0456\u0439\u043D\u043E
+    \u0447\u0438\u0441\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0456 \u0437\u0430\u0433\u043E\u043D\u0443
+    \u0437\u0430 \u043A\u043E\u0436\u043D\u043E\u0433\u043E \u044E\u043D\u0456\u0442\u0430"
+  <CardTypeIcon>k__BackingField: {fileID: 21300000, guid: 8162e1048e6a7da4ca92bec84b165aa7, type: 3}
+  <CardImage>k__BackingField: {fileID: 21300000, guid: 8f6e7683a0e61694f942f70f08b8ad2c, type: 3}
