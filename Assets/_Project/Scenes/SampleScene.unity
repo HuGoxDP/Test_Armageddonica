@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d41f0c28459475f86c55fa55749f4db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardPrefab: {fileID: 5937381076612455443, guid: adfca6d50d3913f49a6fd19d95fcb528, type: 3}
+  _cardPrefab: {fileID: 4996946747369899576, guid: adfca6d50d3913f49a6fd19d95fcb528, type: 3}
   _cardsParent: {fileID: 1823675244}
 --- !u!1 &299289087
 GameObject:
@@ -676,7 +676,81 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardDeck: {fileID: 11400000, guid: 8ecd7269d54ef444c86776ec366fd601, type: 2}
-  _playerCardHolder: {fileID: 1823675245}
+  _playerCardHand: {fileID: 1823675246}
+--- !u!1 &1651719843
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1651719846}
+  - component: {fileID: 1651719845}
+  - component: {fileID: 1651719844}
+  - component: {fileID: 1651719847}
+  m_Layer: 0
+  m_Name: GameCore
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1651719844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651719843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e1e1417b6474d489fe4284108b1a351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _width: 5
+  _height: 5
+  _cellSize: 1
+  _cellPrefab: {fileID: 0}
+--- !u!114 &1651719845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651719843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c04203d00b7f4478b463afc460a07c48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1651719846
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651719843}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1651719847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651719843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91675d859ebe468c8a234280f0339008, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1823675243
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,9 +797,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1823675243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08d640d35ef9499d885579e3133152d6, type: 3}
+  m_Script: {fileID: 11500000, guid: 01df18bda21c47239598d86b651445ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _layoutSettings:
+    <Spacing>k__BackingField: 5
+    <CardWidth>k__BackingField: 160
+    <MaxWidth>k__BackingField: 800
+    <MinSpacing>k__BackingField: -120
+    <HoverOffset>k__BackingField: 5
+    <Exponent>k__BackingField: 1.5
+    <LiftHeight>k__BackingField: 50
 --- !u!114 &1823675246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -735,13 +817,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1823675243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77d34149a90846cdac9d5ed52ef38ba5, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b87be4b78dc45f6a7e57b02e29793fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spacing: 2
-  _cardWidth: 200
-  _maxWidth: 800
-  _minSpacing: -160
 --- !u!1 &1906290122
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,3 +862,4 @@ SceneRoots:
   - {fileID: 299289088}
   - {fileID: 1906290123}
   - {fileID: 814999600}
+  - {fileID: 1651719846}
