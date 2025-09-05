@@ -1,7 +1,21 @@
-﻿namespace _Project.Scripts.Architecture
+﻿using UnityEngine;
+using Vector3 = System.Numerics.Vector3;
+
+namespace _Project.Scripts.Architecture
 {
-    public class GridCell
+    public class GridCell: MonoBehaviour
     {
-        // Зберігає базовий об'єкт, створений через картки(Unit або Building)
+        public Entity OccupiedEntity { get; private set; }
+        public bool IsOccupied => OccupiedEntity != null;
+        
+        public void SetEntity(Entity entity)
+        {
+            OccupiedEntity = entity;
+        }
+        
+        public void ClearEntity()
+        {
+            OccupiedEntity = null;
+        }
     }
 }
