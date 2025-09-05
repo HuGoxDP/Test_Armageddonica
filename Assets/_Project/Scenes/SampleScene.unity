@@ -165,38 +165,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardPrefab: {fileID: 4996946747369899576, guid: adfca6d50d3913f49a6fd19d95fcb528, type: 3}
   _cardsParent: {fileID: 1823675244}
---- !u!1 &299289087
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 299289088}
-  m_Layer: 0
-  m_Name: Services
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &299289088
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 299289087}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1310033264}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,52 +599,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1310033263
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1310033264}
-  - component: {fileID: 1310033265}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1310033264
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310033263}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 299289088}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1310033265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310033263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e730f67fb2044dc68e5b3938c1171b53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardDeck: {fileID: 11400000, guid: 8ecd7269d54ef444c86776ec366fd601, type: 2}
-  _playerCardHand: {fileID: 1823675246}
 --- !u!1 &1651719843
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,8 +632,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _width: 5
   _height: 5
-  _cellSize: 1
-  _cellPrefab: {fileID: 0}
+  _cellSize: 5
+  _cellPrefab: {fileID: -3201629599164640659, guid: e25c7111120e9584180f6aafe16abdd1, type: 3}
 --- !u!114 &1651719845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,6 +646,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c04203d00b7f4478b463afc460a07c48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gridSystem: {fileID: 1651719844}
+  _playerHand: {fileID: 1823675246}
+  _cardDeck: {fileID: 11400000, guid: 8ecd7269d54ef444c86776ec366fd601, type: 2}
 --- !u!4 &1651719846
 Transform:
   m_ObjectHideFlags: 0
@@ -820,6 +745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b87be4b78dc45f6a7e57b02e29793fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gridSystem: {fileID: 1651719844}
 --- !u!1 &1906290122
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,7 +785,6 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 1199456193}
-  - {fileID: 299289088}
+  - {fileID: 1651719846}
   - {fileID: 1906290123}
   - {fileID: 814999600}
-  - {fileID: 1651719846}
