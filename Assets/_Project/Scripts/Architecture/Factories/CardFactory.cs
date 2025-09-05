@@ -11,7 +11,7 @@ namespace _Project.Scripts.Architecture.Factories
         private static CardFactory _instance;
         public static CardFactory Instance => _instance ??= FindFirstObjectByType<CardFactory>();
         
-        [SerializeField] private Card _cardPrefab;
+        [SerializeField] private CardUI _cardPrefab;
         [SerializeField] private Transform _cardsParent;
         private void Awake()
         {
@@ -26,7 +26,7 @@ namespace _Project.Scripts.Architecture.Factories
             }
         }
         
-        public ICard CreateCardFromDeck(CardDeck cardDeck, int index)
+        public CardUI CreateCardFromDeck(CardDeck cardDeck, int index)
         {
             if (cardDeck == null)
             {
@@ -42,7 +42,7 @@ namespace _Project.Scripts.Architecture.Factories
             return CreateCard(cardData);
         }
 
-        public ICard CreateCardFromDeck(CardDeck cardDeck)
+        public CardUI CreateCardFromDeck(CardDeck cardDeck)
         {
             if (cardDeck == null)
             {
@@ -57,7 +57,7 @@ namespace _Project.Scripts.Architecture.Factories
             return CreateCard(cardData);
         }
         
-        public ICard CreateCard(BaseCardData cardData)
+        public CardUI CreateCard(BaseCardData cardData)
         {
             if (cardData == null)
             {
@@ -65,7 +65,7 @@ namespace _Project.Scripts.Architecture.Factories
             }
 
             var cardInstance = Instantiate(_cardPrefab, _cardsParent);
-            cardInstance.Initialize(cardData);
+            cardInstance.SetCardData(cardData);
             return cardInstance;
         }
     }

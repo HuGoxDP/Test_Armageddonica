@@ -1,7 +1,5 @@
 ﻿using System;
-using _Project.Scripts.Architecture.Factories;
 using _Project.Scripts.Architecture.ScriptableObjects;
-using _Project.Scripts.Architecture.UI;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -10,42 +8,46 @@ namespace _Project.Scripts.Architecture.Services
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private CardDeck _cardDeck;
-        [SerializeField] private PlayerCardHolder _playerCardHolder;
+        [SerializeField] private PlayerCardHand _playerCardHand;
 
-        private CardFactory _cardFactory;
-        private ICard _lastAddedCard;
-
-        private void Awake()
+        public void Awake()
         {
-            _cardFactory = CardFactory.Instance;
-            Validate();
+            if (_cardDeck == null)
+            {
+                Debug.LogError("Card deck is not assigned.");
+            }
+            if (_playerCardHand == null)
+            {
+                Debug.LogError("Player card hand is not assigned.");
+            }
         }
 
-        private void Validate()
+        private void Start()
         {
-            if (_cardFactory == null)
+            for (int i = 0; i < 3; i++)
             {
-                throw new Exception("CardFactory instance is not found in the scene.");
+                AddCardToPlayerHand();
             }
         }
 
         [Button("Add Card From Deck To Player Hand")]
         private void AddCardToPlayerHand()
         {
-            var card = _cardFactory.CreateCardFromDeck(_cardDeck);
-            _playerCardHolder.AddCard(card.RectTransform);
-            _lastAddedCard = card;
+            if (_cardDeck == null || _playerCardHand == null) return;
+            
+            var cardData = GetRandomCardFromDeck(_cardDeck);
+            _playerCardHand.AddCard(cardData);
         }
 
-        [Button("Remove Card From Player Hand")]
-        private void RemoveCardFromPlayerHand()
+        private BaseCardData GetRandomCardFromDeck(CardDeck cardDeck)
         {
-            var card = _lastAddedCard;
-            if (card != null)
+            if(cardDeck.Cards.Count == 0)
             {
-                _playerCardHolder.RemoveCard(card.RectTransform);
-                _lastAddedCard = null;
+                Debug.LogWarning("Card deck is empty.");
+                return null;
             }
+            var randomIndex = UnityEngine.Random.Range(0, cardDeck.Cards.Count);
+            return cardDeck.Cards[randomIndex];
         }
     }
 }
