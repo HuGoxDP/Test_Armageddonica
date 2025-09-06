@@ -470,7 +470,7 @@ GameObject:
   - component: {fileID: 2360538060637823459}
   - component: {fileID: 4996946747369899576}
   - component: {fileID: -2543685394331341914}
-  - component: {fileID: 1549297439224845097}
+  - component: {fileID: -6374134917172617348}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -527,18 +527,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0141b0520954980955f60e87e4b7a47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!225 &1549297439224845097
-CanvasGroup:
+--- !u!114 &-6374134917172617348
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2575710148808258092}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d548a9c70f994a8486597758cfebaa35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3398640339299780272
 GameObject:
   m_ObjectHideFlags: 0
