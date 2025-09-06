@@ -3,6 +3,7 @@ using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Deck;
 using _Project.Scripts.Architecture.Grid.Core;
 using _Project.Scripts.Architecture.Hand;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Core.GameStates
@@ -16,6 +17,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         [SerializeField] private CardDeck _cardDeck;
 
         private GameState _state;
+        private int _turnNumber = 0;
 
         private void Start()
         {
@@ -36,12 +38,13 @@ namespace _Project.Scripts.Architecture.Core.GameStates
                 case GameState.Initializing:
                     Debug.Log("Initializing Game");
                     InitializeGame();
+                    _turnNumber++;
                     NextTurn();
                     break;
                 case GameState.CardSelectionTurn:
                     //TODO: Implement card selection logic
                     Debug.Log("Card Selection Turn");
-                    AddCardToPlayerHand();
+                    AddCardsToPlayerHand(_turnNumber == 1 ? 3 : 1); 
                     NextTurn();
                     break;
                 case GameState.CardPlacementTurn:
@@ -85,11 +88,24 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         {
             // TODO: Перерахувати загальну силу армії
         }
-
-        private void AddCardToPlayerHand()
+        
+        [Button("TEST Add Card To Hand")]
+        private void TestAddCardToHand() => AddSingleCardToPlayerHand();
+        
+        private void AddCardsToPlayerHand(int numberOfCards)
         {
             if (_cardDeck == null || _playerHolder == null) return;
-
+            
+            for (int i = 0; i < numberOfCards; i++)
+            {
+                AddSingleCardToPlayerHand();
+            }
+        }
+        
+        private void AddSingleCardToPlayerHand()
+        {
+            if (_cardDeck == null || _playerHolder == null) return;
+            
             var cardData = GetRandomCardFromDeck(_cardDeck);
             _playerHolder.AddCard(cardData);
         }
