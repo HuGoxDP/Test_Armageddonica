@@ -34,61 +34,48 @@ namespace _Project.Scripts.Architecture.Layout
                 return basePositions;
 
             var hoveredPosition = basePositions[hoveredTransform] + new Vector3(0, settings.HoverHeightOffset, 0);
-            basePositions[hoveredTransform] = hoveredPosition;
+            basePositions[hoveredTransform] = hoveredPosition; 
             
-            var hoveredX = hoveredPosition.x;
-            var hoveredLeftEdge = hoveredX - settings.ObjectWidth / 2;
-            var hoveredRightEdge = hoveredX + settings.ObjectWidth / 2;
+            float shift = 0;
+            var shiftDirection = CalculateShiftDirection(hoveredIndex);
+            var hoveredEdge = hoveredPosition.x + (settings.ObjectWidth / 2) * shiftDirection;
+            var firstSideTransform = data.Transforms[hoveredIndex + 1 * shiftDirection];
+            var firsSidePos = basePositions[firstSideTransform];
+            var targetEdge = hoveredEdge + settings.HoverOffset * shiftDirection;
+            var targetSideX = targetEdge + settings.ObjectWidth / 2 * shiftDirection;
+            shift =Mathf.Abs(targetSideX - firsSidePos.x);
+            
+            if (shift > 0)
+            {
+                for (var i = 0; i < transformsCount; i++)
+                {
+                    if (i == hoveredIndex) continue;
+                    
+                    
+                    var direction = i < hoveredIndex ? -1 : 1;
+                    
+                    var transform = data.Transforms[i];
+                    var currentPos = basePositions[transform];
+                    var newPos = new Vector3(currentPos.x + shift * direction, currentPos.y, currentPos.z);
+                    basePositions[transform] = newPos;
+                }
+            }
+            return basePositions;
+        }
 
-            var maxInfluencedCards = transformsCount / 2;
-
+        private static int CalculateShiftDirection(int hoveredIndex)
+        {
+            int shiftDirection;
             if (hoveredIndex > 0)
             {
-                var firstLeftTransform = data.Transforms[hoveredIndex - 1];
-                var firstLeftCurrentPos = basePositions[firstLeftTransform];
-                
-                var targetRightEdge = hoveredLeftEdge - settings.HoverOffset;
-                var targetFirstLeftX = targetRightEdge - settings.ObjectWidth / 2;
-                
-                var leftShift = targetFirstLeftX - firstLeftCurrentPos.x;
-                
-                if (leftShift < 0)
-                {
-                    var leftBound = Mathf.Max(0, hoveredIndex - maxInfluencedCards);
-                    for (var i = hoveredIndex - 1; i >= leftBound; i--)
-                    {
-                        var transform = data.Transforms[i];
-                        var currentPos = basePositions[transform];
-                        var newPos = new Vector3(currentPos.x + leftShift, currentPos.y, currentPos.z);
-                        basePositions[transform] = newPos;
-                    }
-                }
+                shiftDirection = hoveredIndex - 1 < hoveredIndex ? -1 : 1;
+            }
+            else
+            {
+                shiftDirection = hoveredIndex + 1 < hoveredIndex ? -1 : 1; 
             }
 
-            if (hoveredIndex < transformsCount - 1)
-            {
-                var firstRightTransform = data.Transforms[hoveredIndex + 1];
-                var firstRightCurrentPos = basePositions[firstRightTransform];
-                
-                var targetLeftEdge = hoveredRightEdge + settings.HoverOffset;
-                var targetFirstRightX = targetLeftEdge + settings.ObjectWidth / 2;
-                
-                var rightShift = targetFirstRightX - firstRightCurrentPos.x;
-                
-                if (rightShift > 0)
-                {
-                    var rightBound = Mathf.Min(transformsCount - 1, hoveredIndex + maxInfluencedCards);
-                    for (var i = hoveredIndex + 1; i <= rightBound; i++)
-                    {
-                        var transform = data.Transforms[i];
-                        var currentPos = basePositions[transform];
-                        var newPos = new Vector3(currentPos.x + rightShift, currentPos.y, currentPos.z);
-                        basePositions[transform] = newPos;
-                    }
-                }
-            }
-            
-            return basePositions;
+            return shiftDirection;
         }
 
         /// <summary> Calculates the base positions for a collection of transforms in a linear layout. </summary>

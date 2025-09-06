@@ -633,7 +633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _width: 5
   _height: 5
-  _cellSize: 5
+  _cellSize: 3
   _cellPrefab: {fileID: -3201629599164640659, guid: e25c7111120e9584180f6aafe16abdd1, type: 3}
 --- !u!114 &1651719845
 MonoBehaviour:
@@ -659,7 +659,7 @@ Transform:
   m_GameObject: {fileID: 1651719843}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -16.12, y: -1.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
