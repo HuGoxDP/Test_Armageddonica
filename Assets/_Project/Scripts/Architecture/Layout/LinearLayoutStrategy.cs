@@ -36,6 +36,9 @@ namespace _Project.Scripts.Architecture.Layout
             var hoveredPosition = basePositions[hoveredTransform] + new Vector3(0, settings.HoverHeightOffset, 0);
             basePositions[hoveredTransform] = hoveredPosition; 
             
+            if (transformsCount == 1)
+                return basePositions;
+            
             float shift = 0;
             var shiftDirection = CalculateShiftDirection(hoveredIndex);
             var hoveredEdge = hoveredPosition.x + (settings.ObjectWidth / 2) * shiftDirection;

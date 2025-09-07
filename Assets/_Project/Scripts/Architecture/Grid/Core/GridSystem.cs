@@ -1,102 +1,159 @@
-﻿using _Project.Scripts.Architecture.Cards.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Core.GameStates;
+using _Project.Scripts.Architecture.Core.Interfaces;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Grid.Core
 {
-    public class GridSystem : GameControllable
+    public class GridSystem : GameControllable, IGridContext, IGridSystem
     {
-        [SerializeField] private int _width = 5;
-        [SerializeField] private int _height = 5;
-        [SerializeField] private int _cellSize = 1;
+        public Vector2Int GridSize => new(_width, _height);
+        public Vector2 GridOffset => _gridOffset;
+        public float CellSize => _cellSize;
+        public Transform GridTransform => transform;
+        public IGridCell[,] Cells => _cells;
+        public GridCell CellPrefab => _cellPrefab;
+
+        [Header("Grid Configuration")]
+        [SerializeField] private int _width;
+        [SerializeField] private int _height;
+        [SerializeField] private float _cellSize;
+        [SerializeField] private Vector2 _gridOffset;
         [SerializeField] private GridCell _cellPrefab;
-
-        private GridCell[,] _cells;
-        private MatchController _matchController;
-
-
+        
+        private IGridGenerator _gridGenerator;
+        private IPlacementSystem _placementSystem;
+        private IHighlightSystem _highlightSystem;
+        private Dictionary<Type, IGridComponent> _components;
+        
+        private IGridCell[,] _cells;
+        private bool _isGridGenerated;
+        
         private void Awake()
         {
-            _cells = new GridCell[_width, _height];
+            _components = new Dictionary<Type, IGridComponent>();
+
+            _gridGenerator = GetComponent<IGridGenerator>();
+            _placementSystem = GetComponent<IPlacementSystem>();
+            _highlightSystem = GetComponent<IHighlightSystem>();
+            
+            InitializeComponents();
         }
 
         private void Start()
         {
-            GenerateGrid();
+            _gridGenerator?.GenerateGrid();
         }
 
-        public override void OnGameStateChanged(object sender, GameState newState)
+        private void InitializeComponents()
         {
-           
+            if (_gridGenerator != null)
+            {
+                _gridGenerator.Initialize(this);
+                _components.Add(typeof(IGridGenerator),_gridGenerator);
+                
+                _gridGenerator.OnGridGenerated += OnGridGenerated;
+            }
+
+            if (_placementSystem != null)
+            {
+                _placementSystem.Initialize(this);
+                _components.Add(typeof(IPlacementSystem),_placementSystem);
+            }
+            
+            if (_highlightSystem != null)
+            {
+                _highlightSystem.Initialize(this);
+                _components.Add(typeof(IHighlightSystem), _highlightSystem);
+            }
         }
         
-        /// <summary> Generates the grid based on the specified width, height, and cell size. </summary>
-        private void GenerateGrid()
+        protected override void OnGameStateChanged(object sender, GameState newState)
+        {
+        }
+
+        public void HighlightSuitableCells(CardUI card)
+        {
+            if (!_isGridGenerated) return;
+            
+            _highlightSystem.HighlightSuitableCells(card);
+        }
+        
+        public void UnhighlightedCells()
         {
             for (int x = 0; x < _width; x++)
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    float xPosition = x * _cellSize;
-                    float yPosition = y * _cellSize;
-
-                    GridCell newCell = Instantiate(
-                        _cellPrefab,
-                        new Vector3(xPosition, yPosition, 0),
-                        Quaternion.identity,
-                        transform
-                    );
-                    newCell.name = $"Cell_{x}_{y}";
-
-                    _cells[x, y] = newCell;
+                    var cell = _cells[x, y];
+                    _highlightSystem.ClearHighlight(cell);
                 }
             }
         }
 
-        /// <summary> Gets the world position of the center of a cell at the specified grid coordinates. </summary>
-        public GridCell GetCellAtPosition(Vector3 worldPosition)
+        public bool TryPlaceCardOnGrid(CardUI card, Vector2 worldPosition)
         {
-            int x = Mathf.FloorToInt(worldPosition.x / _cellSize);
-            int y = Mathf.FloorToInt(worldPosition.y / _cellSize);
-
-            if (x < 0 || x >= _width || y < 0 || y >= _height)
-            {
-                return null;
-            }
-
-            return _cells[x, y];
+            if (!_isGridGenerated) return false;
+            
+            return _placementSystem.TryPlaceCard(card.CardData, worldPosition);
         }
 
-        /// <summary> Checks if an object can be placed at the specified world position. </summary>
-        public bool CanPlaceAt(Vector3 position)
+        public bool TryGetGridComponent<TComponent>(out TComponent component) where TComponent : IGridComponent
         {
-            if (GetCellAtPosition(position) == null)
+            if(_components.TryGetValue(typeof(TComponent), out var foundComponent) 
+               && foundComponent is TComponent typedComponent)
             {
-                return false;
+                component = typedComponent;
+                return true;
             }
-            // TODO: Перевірити, чи можна розмістити об'єкт на цій позиції
-            return true;
+            component = default;
+            return false;
+        }
+       
+        private void OnGridGenerated(object sender, IGridCell[,] e)
+        {
+            _cells = e;
+            _isGridGenerated = true;
+            _gridGenerator.OnGridGenerated -= OnGridGenerated;
+        }
+        
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            
+            _components.Values.ToList().ForEach(c => c.IsEnabled = false);
+            _components.Clear();
+            _isGridGenerated = false;
         }
         
         
-        /// <summary> Highlights or unhighlights the cell at the specified world position. </summary>
-        private void HighlightCellAtPosition(Vector3 worldPosition, bool highlight)
+        
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected()
         {
-            var cell = GetCellAtPosition(worldPosition);
-            if (cell != null)
+            var gridWorldOrigin = transform.position + new Vector3(_gridOffset.x, _gridOffset.y, 0);
+            if (Application.isPlaying)
             {
-                cell.Highlight(highlight);
+                Gizmos.color = Color.cyan;
+                
+                for (int x = 0; x < _width; x++)
+                {
+                    for (int y = 0; y < _height; y++)
+                    {
+                       var position = _gridGenerator.GetWorldPosition(this, x, y);
+                        Gizmos.DrawWireCube(position, new Vector3(_cellSize, _cellSize, 0.1f));
+                    }
+                }
+                
+                // Візуалізація початкової точки
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(gridWorldOrigin, 0.2f);
             }
         }
-        public void PlaceEntityAt(GridCell cell, BaseCardData cardUICardData)
-        {
-            if (cell == null || cell.IsOccupied)
-            {
-                Debug.LogWarning("Cannot place entity: Cell is null or already occupied.");
-                return;
-            }
-            //TDOD : Use EntityFactory to create entity from card data
-            cell.SetEntity(null);
-        }
+#endif
+        
     }
 }

@@ -20,7 +20,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         {
             Dispose();
         }
-        
-        public abstract void OnGameStateChanged(object sender, GameState newState);
+
+        protected abstract void OnGameStateChanged(object sender, GameState newState);
     }
 }

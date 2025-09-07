@@ -21,3 +21,4 @@ MonoBehaviour:
     \u0442\u0435\u0440\u0438\u0442\u043E\u0440\u0456\u044E."
   <CardTypeIcon>k__BackingField: {fileID: 21300000, guid: c972ba4bb918d2346a2efb7e72668f12, type: 3}
   <CardImage>k__BackingField: {fileID: 21300000, guid: 9a097c7a1a6e71e4aae5730096f15f73, type: 3}
+  <EntityPrefab>k__BackingField: {fileID: 4841167630550787841, guid: 5276b263cc1d8514cbe86dcd35dece0a, type: 3}
