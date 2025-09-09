@@ -21,3 +21,32 @@ MonoBehaviour:
   <CardTypeIcon>k__BackingField: {fileID: 21300000, guid: 8162e1048e6a7da4ca92bec84b165aa7, type: 3}
   <CardImage>k__BackingField: {fileID: 21300000, guid: 8f6e7683a0e61694f942f70f08b8ad2c, type: 3}
   <EntityPrefab>k__BackingField: {fileID: 4841167630550787841, guid: 6683ba220f49bea4397d86a6629727cf, type: 3}
+  <Stats>k__BackingField:
+    _stats:
+    - <StatType>k__BackingField: 0
+      <Value>k__BackingField: 6
+      <Visible>k__BackingField: 1
+    - <StatType>k__BackingField: 1
+      <Value>k__BackingField: 10
+      <Visible>k__BackingField: 1
+    - <StatType>k__BackingField: 2
+      <Value>k__BackingField: 2
+      <Visible>k__BackingField: 0
+    - <StatType>k__BackingField: 3
+      <Value>k__BackingField: 5
+      <Visible>k__BackingField: 1
+    - <StatType>k__BackingField: 4
+      <Value>k__BackingField: 0.6
+      <Visible>k__BackingField: 1
+    - <StatType>k__BackingField: 5
+      <Value>k__BackingField: 4
+      <Visible>k__BackingField: 1
+    - <StatType>k__BackingField: 6
+      <Value>k__BackingField: 6
+      <Visible>k__BackingField: 1
+    - <StatType>k__BackingField: 7
+      <Value>k__BackingField: 0
+      <Visible>k__BackingField: 1
+    - <StatType>k__BackingField: 8
+      <Value>k__BackingField: 100
+      <Visible>k__BackingField: 0

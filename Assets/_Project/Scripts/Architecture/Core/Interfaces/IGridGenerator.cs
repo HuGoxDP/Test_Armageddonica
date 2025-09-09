@@ -13,8 +13,6 @@ namespace _Project.Scripts.Architecture.Core.Interfaces
         (int x, int y) GetCellCoordinates(Vector3 worldPosition);
         (int x, int y) GetCellCoordinates(IGridContext context, Vector3 worldPosition);
         
-        IGridCell[] GetCellNeighbors(IGridCell cell);
-        
         IGridCell GetCellAt(Vector3 worldPosition);
         IGridCell GetCellAt(int x, int y);
     }

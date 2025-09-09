@@ -1,6 +1,8 @@
 ﻿using System;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Deck;
+using _Project.Scripts.Architecture.Entities.Base;
+using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Grid.Core;
 using _Project.Scripts.Architecture.Hand;
 using NaughtyAttributes;
@@ -14,6 +16,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         
         [SerializeField] private GridSystem _gridSystem;
         [SerializeField] private PlayerHand _playerHolder;
+        [SerializeField] private EntityEffectManager _entityEffectManager;
         [SerializeField] private CardDeck _cardDeck;
 
         private GameState _state;
@@ -27,6 +30,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         {
             _playerHolder.SetMatchController(this);
             _gridSystem.SetMatchController(this);
+            _entityEffectManager.SetMatchController(this);
         }
         
         public void UpdateGameState(GameState newState)
@@ -36,25 +40,20 @@ namespace _Project.Scripts.Architecture.Core.GameStates
             switch (_state)
             {
                 case GameState.Initializing:
-                    Debug.Log("Initializing Game");
                     InitializeGame();
-                    _turnNumber++;
                     NextTurn();
                     break;
                 case GameState.CardSelectionTurn:
                     //TODO: Implement card selection logic
-                    Debug.Log("Card Selection Turn");
+                    _turnNumber++;
                     AddCardsToPlayerHand(_turnNumber == 1 ? 3 : 1); 
                     NextTurn();
                     break;
                 case GameState.CardPlacementTurn:
-                    Debug.Log("Card Placement Turn");
                     break;
                 case GameState.BuffTurn:
-                    //TODO: Implement buff logic
+                    BuffTurn();
                     //TODO Recalculate army strength
-                    Debug.Log("Buff Turn");
-                    NextTurn();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -62,7 +61,21 @@ namespace _Project.Scripts.Architecture.Core.GameStates
             
             OnGameStateChanged?.Invoke(this, _state);
         }
-        
+
+        private async void BuffTurn()
+        {
+            try
+            {
+                await _entityEffectManager.CalculateAllEffects();
+                RecalculateArmyStrength();
+                NextTurn();
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
         public void NextTurn()
         {
             switch (_state)

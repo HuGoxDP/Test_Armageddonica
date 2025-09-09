@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Grid.Core;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace _Project.Scripts.Architecture.Core.Interfaces
         IGridCell[,] Cells { get; }
         GridCell CellPrefab { get; }
         
-        bool TryGetGridComponent<TComponent>(out TComponent component) where TComponent : IGridComponent;
+        bool CanPlaceAt(BaseCardData cardData, IGridCell cell);
+        bool TryGetCell(Vector3 position, out IGridCell cell);
     }
 }

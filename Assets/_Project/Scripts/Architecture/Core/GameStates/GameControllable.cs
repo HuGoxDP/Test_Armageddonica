@@ -1,4 +1,5 @@
 ﻿using System;
+using _Project.Scripts.Architecture.Enums;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Core.GameStates

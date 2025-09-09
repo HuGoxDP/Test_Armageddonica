@@ -31,13 +31,12 @@ namespace _Project.Scripts.Architecture.Grid.Components
                    var cellPosition = GetWorldPosition(x, y);
                    var newCell = Instantiate(_context.CellPrefab, cellPosition, Quaternion.identity, _context.GridTransform);
                    
-                   newCell.SetupCellSize(_context.CellSize);
+                   newCell.Initialize(_context.CellSize, new Vector2Int(x,y));
                    newCell.name = $"Cell_{x}_{y}";
                    grid[x, y] = newCell;
                 }
             }
             
-            AssignNeighbors(grid);
             OnGridGenerated?.Invoke(this, grid);
         }
         
@@ -59,11 +58,6 @@ namespace _Project.Scripts.Architecture.Grid.Components
             int x = Mathf.FloorToInt(localPos.x / context.CellSize);
             int y = Mathf.FloorToInt(localPos.y / context.CellSize);
             return (x, y);
-        }
-
-        public IGridCell[] GetCellNeighbors(IGridCell cell)
-        {
-           return cell.Neighbors;
         }
 
         public IGridCell GetCellAt(Vector3 worldPosition)
@@ -99,33 +93,6 @@ namespace _Project.Scripts.Architecture.Grid.Components
             
             var gridWorldOrigin = context.GridTransform.position + new Vector3(context.GridOffset.x, context.GridOffset.y, 0);
             return gridWorldOrigin + new Vector3(x * context.CellSize + context.CellSize / 2, y * context.CellSize + context.CellSize / 2, 0);
-        }
-        
-        private void AssignNeighbors(IGridCell[,] grid)
-        {            
-            for (int x = 0; x < _context.GridSize.x; x++)
-            {
-                for (int y = 0; y < _context.GridSize.y; y++)
-                {
-                    var cell = grid[x, y];
-                    
-                    // Up
-                    if (y < _context.GridSize.y - 1)
-                        cell.SetNeighbor(grid[x, y + 1], Direction.Up);
-                    
-                    // Down
-                    if (y > 0)
-                        cell.SetNeighbor(grid[x, y - 1], Direction.Down);
-                    
-                    // Left
-                    if (x > 0)
-                        cell.SetNeighbor(grid[x - 1, y], Direction.Left);
-                    
-                    // Right
-                    if (x < _context.GridSize.x - 1)
-                        cell.SetNeighbor(grid[x + 1, y], Direction.Right);
-                }
-            }
         }
     }
 }

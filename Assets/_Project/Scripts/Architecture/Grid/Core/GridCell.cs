@@ -1,4 +1,6 @@
-﻿using _Project.Scripts.Architecture.Entities.Base;
+﻿using _Project.Scripts.Architecture.Core.Interfaces;
+using _Project.Scripts.Architecture.Entities.Base;
+using _Project.Scripts.Architecture.Enums;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Grid.Core
@@ -6,18 +8,12 @@ namespace _Project.Scripts.Architecture.Grid.Core
     public class GridCell : MonoBehaviour, IGridCell
     {
         public GameObject GameObject => gameObject;
-        public IGridCell[] Neighbors {get; private set;}
         public Entity OccupiedEntity { get; private set; }
         public bool IsOccupied => OccupiedEntity != null;
-
+        public Vector2Int Position { get; private set; }
+        
         [SerializeField] private SpriteRenderer _gridBody;
         [SerializeField] private SpriteRenderer _gridHighlight;
-        
-
-        private void Awake()
-        {
-            Neighbors = new IGridCell[4]; // Up, Down, Left, Right
-        }
         
         public void HighlightCell(HighlightType type)
         {
@@ -29,30 +25,22 @@ namespace _Project.Scripts.Architecture.Grid.Core
             {
                 _gridHighlight.color = Color.white;
             }
-            else if(type == HighlightType.Invalid)
-            {
-                _gridHighlight.color = Color.grey;
-            }
-        }
-        
-        public void SetupCellSize(float size)
-        {
-            _gridBody.drawMode = SpriteDrawMode.Sliced;
-            _gridBody.size = new Vector2(size, size);
-            _gridHighlight.drawMode = SpriteDrawMode.Sliced;
-            _gridHighlight.size = new Vector2(size - 0.5f, size - 0.5f);
         }
 
-        public void SetNeighbor(IGridCell neighbor, Direction direction)
+        public void Initialize(float cellSize, Vector2Int position)
         {
-            Neighbors[(int)direction] = neighbor;
+            Position = position;
+            
+            _gridBody.drawMode = SpriteDrawMode.Sliced;
+            _gridBody.size = new Vector2(cellSize, cellSize);
+            _gridHighlight.drawMode = SpriteDrawMode.Sliced;
+            _gridHighlight.size = new Vector2(cellSize - 0.5f, cellSize - 0.5f);
         }
         
         public void SetEntity(Entity entity)
         {
             OccupiedEntity = entity;
-            Debug.Log($"Entity {entity.name} placed on cell {name}");
-            Debug.Log(IsOccupied);
+            entity.InitializePosition(Position);
         }
 
         public void ClearEntity()
@@ -62,26 +50,5 @@ namespace _Project.Scripts.Architecture.Grid.Core
             
             Destroy(entity.gameObject);
         }
-    }
-    
-    public interface IGridCell
-    {
-        public GameObject GameObject { get; }
-        public IGridCell[] Neighbors { get; }
-        public Entity OccupiedEntity { get; }
-        public bool IsOccupied { get; }
-        
-        public void HighlightCell(HighlightType type);
-        public void SetNeighbor(IGridCell neighbor, Direction direction);
-        public void SetupCellSize(float size);
-        public void SetEntity(Entity entity);
-        public void ClearEntity();
-    }
-    
-    public enum HighlightType
-    {
-        None,
-        Valid,
-        Invalid,
     }
 }

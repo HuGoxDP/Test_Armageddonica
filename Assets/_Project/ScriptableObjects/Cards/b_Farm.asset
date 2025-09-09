@@ -21,3 +21,5 @@ MonoBehaviour:
   <CardTypeIcon>k__BackingField: {fileID: 21300000, guid: c972ba4bb918d2346a2efb7e72668f12, type: 3}
   <CardImage>k__BackingField: {fileID: 21300000, guid: f087b771005c9d3448ac812420ab8cb7, type: 3}
   <EntityPrefab>k__BackingField: {fileID: 4841167630550787841, guid: 50c7cda577e10ba4c8dfd63a7fd29112, type: 3}
+  <Stats>k__BackingField:
+    _stats: []

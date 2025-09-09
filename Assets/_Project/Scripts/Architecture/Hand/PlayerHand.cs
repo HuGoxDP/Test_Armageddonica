@@ -5,6 +5,7 @@ using _Project.Scripts.Architecture.Cards.Factories;
 using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Core.GameStates;
 using _Project.Scripts.Architecture.Core.Interfaces;
+using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Layout;
 using UnityEngine;
 
@@ -164,6 +165,7 @@ namespace _Project.Scripts.Architecture.Hand
                 
                 _isCardDragging = false;
                 RemoveCard(card);
+                MatchController.NextTurn();
                 return;
             }
             _isCardDragging = false;

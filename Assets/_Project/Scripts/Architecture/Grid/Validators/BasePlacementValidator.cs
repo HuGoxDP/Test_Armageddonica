@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Architecture.Cards.Data;
+using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Grid.Components;
 using _Project.Scripts.Architecture.Grid.Core;
 using UnityEngine;

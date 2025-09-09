@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _Project.Scripts.Architecture.Enums;
+using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Cards.Data
 {

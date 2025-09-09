@@ -2,6 +2,7 @@
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Entities;
+using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Grid.Core;
 using _Project.Scripts.Architecture.Grid.Validators;
 using UnityEngine;
@@ -42,13 +43,9 @@ namespace _Project.Scripts.Architecture.Grid.Components
         public bool CanPlaceAt(BaseCardData cardData, IGridCell cell)
         {
             if (!IsEnabled) return false;
-
-            Debug.Log($"Checking placement for card {cardData.CardName} at cell {cell.GameObject.name}");
-            Debug.Log($"Number of validators: {_validators.Count}");
             
             foreach (var validator in _validators)
             {
-                Debug.Log($"Running validator {validator.GetType().Name} for cell {cell.GameObject.name}");
                 if (!validator.Validate(cardData, cell))
                 {
                     return false;
@@ -82,15 +79,7 @@ namespace _Project.Scripts.Architecture.Grid.Components
 
         private bool TryGetCell(Vector3 position, out IGridCell cell)
         {
-            cell = null;
-            if (!_context.TryGetGridComponent<IGridGenerator>(out var gridGenerator))
-            {
-                Debug.LogWarning("GridGenerator component not found in context.");
-                return false;
-            }
-
-            cell = gridGenerator.GetCellAt(position);
-            if (cell == null)
+            if (!_context.TryGetCell(position, out cell))
             {
                 Debug.LogWarning("No cell found at the given position.");
                 return false;
@@ -106,7 +95,6 @@ namespace _Project.Scripts.Architecture.Grid.Components
 
             if (entity == null) return false;
 
-            Debug.Log($"Entity {entity.name} placed at cell {cell.GameObject.name}");
             cell.SetEntity(entity);
             return true;
         }
@@ -115,7 +103,6 @@ namespace _Project.Scripts.Architecture.Grid.Components
         {
             // Implement spell effect logic here
             // For now, just log the spell usage
-            Debug.Log($"Spell {cardData.CardName} used at cell {cell.GameObject.name}");
             return true;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Architecture.Entities.Base;
+using _Project.Scripts.Architecture.Enums;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Cards.Data
@@ -13,6 +14,7 @@ namespace _Project.Scripts.Architecture.Cards.Data
        
         [Header("Entity Settings")]
         [field: SerializeField]  public Entity EntityPrefab { get; protected set;  }
+        [field: SerializeField] public EntityStatsContainer Stats { get; protected set; }
         
         public abstract CardType CardType { get; }
     }

@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Core.Interfaces;
+using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Grid.Core;
 using UnityEngine;
 
@@ -22,25 +23,19 @@ namespace _Project.Scripts.Architecture.Grid.Components
             var cells = _context.Cells;
             var width = _context.GridSize.x;
             var height = _context.GridSize.y;
-
-            if (!_context.TryGetGridComponent<IPlacementSystem>(out var placementSystem))
-            {
-                Debug.LogError("PlacementSystem not found in GridContext");
-                return;
-            }
             
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
                     var cell = cells[x, y];
-                    if (placementSystem.CanPlaceAt(card.CardData, cell))
+                    if (_context.CanPlaceAt(card.CardData, cell))
                     {
                         HighlightCell(cell, HighlightType.Valid);
                     }
                     else
                     {
-                        HighlightCell(cell, HighlightType.Invalid);
+                        HighlightCell(cell, HighlightType.None);
                     }
                 }
             }

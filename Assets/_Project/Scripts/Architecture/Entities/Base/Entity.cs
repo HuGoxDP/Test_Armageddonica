@@ -1,16 +1,114 @@
-﻿using _Project.Scripts.Architecture.Cards.Data;
+﻿using System;
+using System.Collections.Generic;
+using _Project.Scripts.Architecture.Cards.Data;
+using _Project.Scripts.Architecture.Core.Interfaces;
+using _Project.Scripts.Architecture.Enums;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Entities.Base
 {
-    public class Entity : MonoBehaviour, IPlaceable
+    public sealed class Entity : MonoBehaviour
     {
-        private BaseCardData _cardData;
+        [field: SerializeField, ReadOnly, TextArea(3, 9)]
+        public string StatsLabel { get; private set; }
+
+        public Vector2Int Position { get; private set; }
+        public BaseCardData CardData { get; private set; }
         
-        public virtual void Initialize(BaseCardData cardData)
+        private EntityStatsContainer Stats { get; set; }
+        private Dictionary<Type, IComponent> Components { get; set; }
+        private Dictionary<Type, IEffectApplicator> EffectApplicators { get; set; }
+
+
+        public void Initialize(BaseCardData cardData)
         {
-            _cardData = cardData;
+            CardData = cardData;
+            Stats = cardData.Stats;
             gameObject.name = cardData.CardName;
+            InitializeComponents();
+            UpdateStats();
+        }
+
+        public void InitializePosition(Vector2Int position)
+        {
+            Position = position;
+        }
+
+        public Entity HasStat(StatType statType)
+        {
+            return Stats.HasStat(statType) ? this : null;
+        }
+
+        private void UpdateStats()
+        {
+            StatsLabel = Stats.GetVisibleStats();
+        }
+
+        public float GetStat(StatType statType, StatValueSource statValueSource = StatValueSource.Current)
+        {
+            return Stats.GetStat(statType, statValueSource);
+        }
+
+        public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod, StatValueSource statValueSource,  float value)
+        {
+            Stats.ApplyStatModifier(statType, calculationMethod, statValueSource, value);
+            UpdateStats();
+        }
+
+        public TComponent GetEntityComponent<TComponent>() where TComponent : IComponent
+        {
+            if (Components == null) return default;
+
+            Type componentType = typeof(TComponent);
+            if (Components.TryGetValue(componentType, out var component))
+            {
+                return (TComponent)component;
+            }
+
+            return default;
+        }
+
+        public TEffectApplicator GetEffectApplicator<TEffectApplicator>() where TEffectApplicator : IEffectApplicator
+        {
+            if (EffectApplicators == null) return default;
+
+            Type applicatorType = typeof(TEffectApplicator);
+            if (EffectApplicators.TryGetValue(applicatorType, out var applicator))
+            {
+                return (TEffectApplicator)applicator;
+            }
+
+            return default;
+        }
+
+        public List<IEffectApplicator> GetAllEffectApplicators()
+        {
+            if (EffectApplicators == null) return new List<IEffectApplicator>();
+
+            var applicators = new List<IEffectApplicator>(EffectApplicators.Values);
+            return applicators;
+        }
+
+        private void InitializeComponents()
+        {
+            Components = new Dictionary<Type, IComponent>();
+            EffectApplicators = new Dictionary<Type, IEffectApplicator>();
+
+            var gameObjectComponents = GetComponents<MonoBehaviour>();
+            foreach (var mb in gameObjectComponents)
+            {
+                if (mb is IComponent componentInterface)
+                {
+                    componentInterface.Initialize(this);
+                    Components.Add(componentInterface.GetType(), componentInterface);
+
+                    if (mb is IEffectApplicator effectApplicator)
+                    {
+                        EffectApplicators.Add(effectApplicator.GetType(), effectApplicator);
+                    }
+                }
+            }
         }
     }
 }
