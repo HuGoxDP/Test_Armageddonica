@@ -6,10 +6,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Runtime;
+using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Core.GameStates;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Entities.Base;
 using _Project.Scripts.Architecture.Enums;
+using _Project.Scripts.Architecture.Tooltip;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Grid.Core
@@ -36,10 +38,13 @@ namespace _Project.Scripts.Architecture.Grid.Core
         private IGridGenerator _gridGenerator;
         private IPlacementSystem _placementSystem;
         private IHighlightSystem _highlightSystem;
+        private IGridInputSystem _gridInputSystem;
         private Dictionary<Type, IGridComponent> _components;
 
         private IGridCell[,] _cells;
+        private StatsTooltipUI _statsTooltipUI;
         private bool _isGridGenerated;
+        private bool _isEnableTooltips = true;
 
         private void Awake()
         {
@@ -48,6 +53,7 @@ namespace _Project.Scripts.Architecture.Grid.Core
             _gridGenerator = GetComponent<IGridGenerator>();
             _placementSystem = GetComponent<IPlacementSystem>();
             _highlightSystem = GetComponent<IHighlightSystem>();
+            _gridInputSystem = GetComponent<IGridInputSystem>();
 
             InitializeComponents();
         }
@@ -55,6 +61,9 @@ namespace _Project.Scripts.Architecture.Grid.Core
         private void Start()
         {
             _gridGenerator?.GenerateGrid();
+            
+            _statsTooltipUI = ServiceLocator.Get<StatsTooltipUI>();
+            if (_statsTooltipUI == null) Debug.LogError("StatsTooltipUI reference is not assigned in GridSystem.");
         }
 
         protected override void OnDestroy()
@@ -184,9 +193,55 @@ namespace _Project.Scripts.Architecture.Grid.Core
                 _highlightSystem.Initialize(this);
                 _components.Add(typeof(IHighlightSystem), _highlightSystem);
             }
+
+            if (_gridInputSystem != null)
+            {
+                _gridInputSystem.Initialize(this);
+                _components.Add(typeof(IGridInputSystem), _gridInputSystem);
+                
+                _gridInputSystem.OnCellHoverEnter += OnCellHoverEnter;
+                _gridInputSystem.OnCellHoverExit += OnCellHoverExit;
+            }
         }
 
-       
+        private void OnCellHoverEnter(IGridCell cell)
+        {   if (cell == null) return;
+            
+            //hoverLogic
+            _highlightSystem.HighlightHoverCell(cell);
+            
+            //tooltip logic
+            if(_statsTooltipUI == null) return;
+            if (cell.IsOccupied && _isEnableTooltips)
+            {
+                _statsTooltipUI.SetTooltip(cell.OccupiedEntity);
+                _statsTooltipUI.ShowTooltip();
+            }
+        }
+
+        private void OnCellHoverExit(IGridCell cell)
+        {
+            //hoverLogic
+            _highlightSystem.ClearHoverHighlight();
+            
+            //tooltip logic
+            if(_statsTooltipUI == null) return;
+            _statsTooltipUI.HideTooltip();
+        }
+
+        public void EnableTooltips(bool isEnable)
+        {
+            if(_statsTooltipUI == null) return;
+            if (isEnable)
+            {
+                _isEnableTooltips = true;
+            }
+            else
+            {
+                _isEnableTooltips = false;
+                _statsTooltipUI.HideTooltip();
+            }
+        }
 
         private void OnGridGenerated(object sender, IGridCell[,] e)
         {

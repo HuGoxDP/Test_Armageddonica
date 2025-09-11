@@ -15,7 +15,7 @@ namespace _Project.Scripts.Architecture.Entities.Base
         public Vector2Int Position { get; private set; }
         public EntityCardData CardData { get; private set; }
         
-        private EntityStatsContainer Stats { get; set; }
+        private StatsContainer Stats { get; set; }
         private Dictionary<Type, IComponent> Components { get; set; }
         private Dictionary<Type, IEffectApplicator> EffectApplicators { get; set; }
 

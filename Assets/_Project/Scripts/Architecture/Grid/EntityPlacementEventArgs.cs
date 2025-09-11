@@ -1,7 +1,7 @@
 ﻿using System;
 using _Project.Scripts.Architecture.Entities.Base;
 
-namespace _Project.Scripts.Architecture.Grid.Core
+namespace _Project.Scripts.Architecture.Grid
 {
     public class EntityPlacementEventArgs : EventArgs
     {

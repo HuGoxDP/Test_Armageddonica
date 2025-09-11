@@ -134,12 +134,12 @@ namespace _Project.Scripts.Architecture.Hand
             _originalDraggedCardSiblingIndex = card.transform.GetSiblingIndex();
             
             card.transform.SetAsLastSibling();
-            card.transform.localScale = Vector3.one * 0.5f;
+            card.transform.localScale = Vector3.one * 0.25f;
             
             if (_originalDraggedCardCanvasGroup != null)
             {
                 _originalDraggedCardCanvasGroup.blocksRaycasts = false;
-                _originalDraggedCardCanvasGroup.alpha = 0.8f;
+                _originalDraggedCardCanvasGroup.alpha = 0.5f;
             }
             _cardPlacementHandler.StartPlacingCard(card);
         }

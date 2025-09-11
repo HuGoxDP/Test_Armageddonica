@@ -21,7 +21,7 @@ namespace _Project.Scripts.Architecture.Grid.Validators
             }
         }
 
-        public virtual bool Validate(BaseCardData cardData, IGridCell cell)
+        public bool Validate(BaseCardData cardData, IGridCell cell)
         {
             if (cardData == null)
             {

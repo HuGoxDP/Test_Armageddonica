@@ -26,6 +26,7 @@ namespace _Project.Scripts.Architecture.Hand
             var worldPosition = _mainCamera.ScreenToWorldPoint(new Vector3(eventDataPosition.x, eventDataPosition.y, _mainCamera.nearClipPlane));
             _eventDataPosition = new Vector3(worldPosition.x, worldPosition.y, 0);
             _gridSystem.UnhighlightedCells();
+            _gridSystem.EnableTooltips(true);
             return await _gridSystem.TryPlaceCardOnGrid(card, _eventDataPosition);
         }
 
@@ -39,6 +40,7 @@ namespace _Project.Scripts.Architecture.Hand
         public void StartPlacingCard(CardUI card)
         {
             _gridSystem.HighlightSuitableCells(card);
+            _gridSystem.EnableTooltips(false);
         }
     }
 }

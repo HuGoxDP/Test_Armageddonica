@@ -9,7 +9,7 @@ namespace _Project.Scripts.Architecture.Grid.Validators
         protected override bool ValidateSpellCard(SpellCardData cardData, IGridCell cell)
         {
             if (cell.OccupiedEntity == null) return false;
-            if (!ValidateTargetType(cardData, cell)) return true;
+            if (!ValidateTargetType(cardData, cell)) return false;
 
             foreach (var statType in cardData.RequiredStats)
             {

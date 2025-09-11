@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 48d1c4863ddc1c6498c0df681e51e7e2
+guid: ed4e8e8d2146e9e48a8c5df8e5b7be66
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -725026494276828387
-    second: GridCell_256x256_white_4px_0
+      213: -6500909134412593032
+    second: grid_cell_white_border_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 1, y: 1, z: 1, w: 1}
+  spriteBorder: {x: 20, y: 20, z: 20, w: 20}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -178,7 +178,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GridCell_256x256_white_4px_0
+      name: grid_cell_white_border_0
       rect:
         serializedVersion: 2
         x: 0
@@ -193,8 +193,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d1302ebae3030f5f0800000000000000
-      internalID: -725026494276828387
+      spriteID: 878ce36e59128c5a0800000000000000
+      internalID: -6500909134412593032
       vertices: []
       indices: 
       edges: []
@@ -213,7 +213,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      GridCell_256x256_white_4px_0: -725026494276828387
+      grid_cell_white_border_0: -6500909134412593032
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -8,38 +8,42 @@ using UnityEngine;
 namespace _Project.Scripts.Architecture.Entities.Base
 {
     [Serializable]
-    public class EntityStatsContainer
+    public class StatsContainer
     {
-        [SerializeField] private List<EntityStat> _stats;
+        public event Action<StatType, float> OnStatChanged;
 
-        private Dictionary<StatType, EntityStat> _statsDictionary;
+        [SerializeField] private StatData[] _stats;
+
+        private Dictionary<StatType, int> _statIndexMap;
 
         /// <summary> Returns stat value. </summary>
-        public float GetStat(StatType statType, StatValueSource statValueSource)
+        public float GetStat(StatType type, StatValueSource source)
         {
             InitializeStatsDictionary();
 
-            return statValueSource switch
+            if (_statIndexMap.TryGetValue(type, out int index))
             {
-                StatValueSource.Current => _statsDictionary[statType].CurrentValue,
-                StatValueSource.Base => _statsDictionary[statType].BaseValue,
-                _ => throw new ArgumentOutOfRangeException(nameof(statValueSource), statValueSource, null)
-            };
+                return source == StatValueSource.Base ? _stats[index].BaseValue : _stats[index].CurrentValue;
+            }
+            
+            return 0f;
         }
         
         /// <summary> Sets stat value. </summary>
-        public void SetStat(StatType statType, float value)
+        public void SetStat(StatType type, float value)
         {
-            InitializeStatsDictionary();
-            
-            _statsDictionary[statType].CurrentValue = value;
+            if (_statIndexMap.TryGetValue(type, out int index) && !_stats[index].IsConst)
+            {
+                _stats[index].CurrentValue = value;
+                OnStatChanged?.Invoke(type, value);
+            }
         }
         
         /// <summary> Returns true if stat exists. </summary>
         public bool HasStat(StatType statType)
         {
             InitializeStatsDictionary();
-            return _statsDictionary.ContainsKey(statType);
+            return _statIndexMap.ContainsKey(statType);
         }
 
         /// <summary> Returns string with all visible stats. </summary>
@@ -58,7 +62,8 @@ namespace _Project.Scripts.Architecture.Entities.Base
         public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod, float value)
         {
             InitializeStatsDictionary();
-            if (!_statsDictionary.TryGetValue(statType, out var stat))
+            
+            if (!_statIndexMap.TryGetValue(statType, out var stat))
             {
                 Debug.LogError($"Stat {statType} not found in EntityStatsContainer");
                 return;
@@ -83,19 +88,13 @@ namespace _Project.Scripts.Architecture.Entities.Base
         
         private void InitializeStatsDictionary()
         {
-            if (_statsDictionary == null)
+            if (_statIndexMap == null)
             {
-                _statsDictionary = new Dictionary<StatType, EntityStat>();
-                foreach (var stat in _stats)
+                _statIndexMap = new Dictionary<StatType, int>();
+                for (int i = 0; i < _stats.Length; i++)
                 {
-                    if (_statsDictionary.ContainsKey(stat.StatType))
-                    {
-                        Debug.LogError($"Duplicate stat {stat.StatType} in EntityStatsContainer");
-                        continue;
-                    }
-
-                    stat.CurrentValue = stat.BaseValue;
-                    _statsDictionary.Add(stat.StatType, stat);
+                    _statIndexMap[_stats[i].StatType] = i;
+                    _stats[i].CurrentValue = _stats[i].BaseValue;
                 }
             }
         }

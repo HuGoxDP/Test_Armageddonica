@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Cards.Data;
+using _Project.Scripts.Architecture.Grid;
 using _Project.Scripts.Architecture.Grid.Core;
 using _Project.Scripts.Architecture.Grid.Validators;
 using UnityEngine;

@@ -10,7 +10,7 @@ namespace _Project.Scripts.Architecture.Cards.Data
     public abstract class EntityCardData : BaseCardData
     {
         [field: SerializeField]  public Entity EntityPrefab { get; protected set;  }
-        [field: SerializeField] public EntityStatsContainer Stats { get; protected set; }
+        [field: SerializeField] public StatsContainer Stats { get; protected set; }
         
         [field: SerializeField]  private StatType[] _requiredStats;
         
