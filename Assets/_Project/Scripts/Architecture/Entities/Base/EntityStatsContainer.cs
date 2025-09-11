@@ -28,21 +28,11 @@ namespace _Project.Scripts.Architecture.Entities.Base
         }
         
         /// <summary> Sets stat value. </summary>
-        public void SetStat(StatType statType, StatValueSource statValueSource, float value)
+        public void SetStat(StatType statType, float value)
         {
             InitializeStatsDictionary();
             
-            switch (statValueSource)
-            {
-                case StatValueSource.Current:
-                    _statsDictionary[statType].CurrentValue = value;
-                    return;
-                case StatValueSource.Base:
-                    _statsDictionary[statType].BaseValue = value;
-                    return;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(statValueSource), statValueSource, null);
-            }
+            _statsDictionary[statType].CurrentValue = value;
         }
         
         /// <summary> Returns true if stat exists. </summary>
@@ -65,7 +55,7 @@ namespace _Project.Scripts.Architecture.Entities.Base
         }
         
         /// <summary> Applies stat modifier. </summary>
-        public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod, StatValueSource statValueSource, float value)
+        public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod, float value)
         {
             InitializeStatsDictionary();
             if (!_statsDictionary.TryGetValue(statType, out var stat))
@@ -74,7 +64,7 @@ namespace _Project.Scripts.Architecture.Entities.Base
                 return;
             }
             
-            var statValue = GetStat(statType, statValueSource);
+            var statValue = GetStat(statType, StatValueSource.Current);
             
             switch (calculationMethod)
             {
@@ -88,7 +78,7 @@ namespace _Project.Scripts.Architecture.Entities.Base
                     throw new ArgumentOutOfRangeException(nameof(calculationMethod), calculationMethod, null);
             }
             
-            SetStat(statType, statValueSource, statValue);
+            SetStat(statType, statValue);
         }
         
         private void InitializeStatsDictionary()

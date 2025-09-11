@@ -1,15 +1,30 @@
 ﻿using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Core.Interfaces;
-using _Project.Scripts.Architecture.Grid.Core;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Grid.Validators
 {
     public class CellAvailableValidator : BasePlacementValidator
     {
-        public override bool Validate(BaseCardData cardData, IGridCell cell)
+        protected override bool ValidateSpellCard(SpellCardData cardData, IGridCell cell)
         {
-            return !cell.IsOccupied;
+            if (cell.OccupiedEntity == null) return false;
+            if (!ValidateTargetType(cardData, cell)) return true;
+
+            foreach (var statType in cardData.RequiredStats)
+            {
+                if (!cell.OccupiedEntity.HasStat(statType))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        protected override bool ValidateEntityCard(EntityCardData cardData, IGridCell cell)
+        {
+            return cell.OccupiedEntity == null;
         }
     }
 }

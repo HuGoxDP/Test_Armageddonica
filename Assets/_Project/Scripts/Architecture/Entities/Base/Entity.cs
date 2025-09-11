@@ -8,24 +8,24 @@ using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Entities.Base
 {
-    public sealed class Entity : MonoBehaviour
+    public sealed class Entity : MonoBehaviour, IGridPlaceable
     {
-        [field: SerializeField, ReadOnly, TextArea(3, 9)]
-        public string StatsLabel { get; private set; }
-
+        [field: SerializeField, ReadOnly, TextArea(3, 9), Space(20)] public string StatsLabel { get; private set; }
+        
         public Vector2Int Position { get; private set; }
-        public BaseCardData CardData { get; private set; }
+        public EntityCardData CardData { get; private set; }
         
         private EntityStatsContainer Stats { get; set; }
         private Dictionary<Type, IComponent> Components { get; set; }
         private Dictionary<Type, IEffectApplicator> EffectApplicators { get; set; }
 
+        private List<IEffectApplicator> _cachedEffectApplicators;
 
-        public void Initialize(BaseCardData cardData)
+
+        public void Initialize(EntityCardData cardData)
         {
             CardData = cardData;
             Stats = cardData.Stats;
-            gameObject.name = cardData.CardName;
             InitializeComponents();
             UpdateStats();
         }
@@ -50,9 +50,9 @@ namespace _Project.Scripts.Architecture.Entities.Base
             return Stats.GetStat(statType, statValueSource);
         }
 
-        public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod, StatValueSource statValueSource,  float value)
+        public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod,  float value)
         {
-            Stats.ApplyStatModifier(statType, calculationMethod, statValueSource, value);
+            Stats.ApplyStatModifier(statType, calculationMethod, value);
             UpdateStats();
         }
 
@@ -84,29 +84,28 @@ namespace _Project.Scripts.Architecture.Entities.Base
 
         public List<IEffectApplicator> GetAllEffectApplicators()
         {
-            if (EffectApplicators == null) return new List<IEffectApplicator>();
+            _cachedEffectApplicators ??= new List<IEffectApplicator>(EffectApplicators.Values);
 
-            var applicators = new List<IEffectApplicator>(EffectApplicators.Values);
-            return applicators;
+            return _cachedEffectApplicators;
         }
 
         private void InitializeComponents()
         {
+            var allComponents = GetComponents<MonoBehaviour>();
             Components = new Dictionary<Type, IComponent>();
             EffectApplicators = new Dictionary<Type, IEffectApplicator>();
 
-            var gameObjectComponents = GetComponents<MonoBehaviour>();
-            foreach (var mb in gameObjectComponents)
+            foreach (var component in allComponents)
             {
-                if (mb is IComponent componentInterface)
+                if (component is IComponent iComponent)
                 {
-                    componentInterface.Initialize(this);
-                    Components.Add(componentInterface.GetType(), componentInterface);
-
-                    if (mb is IEffectApplicator effectApplicator)
-                    {
-                        EffectApplicators.Add(effectApplicator.GetType(), effectApplicator);
-                    }
+                    iComponent.Initialize(this);
+                    Components.Add(component.GetType(), iComponent);
+                }
+        
+                if (component is IEffectApplicator effectApplicator)
+                {
+                    EffectApplicators.Add(component.GetType(), effectApplicator);
                 }
             }
         }

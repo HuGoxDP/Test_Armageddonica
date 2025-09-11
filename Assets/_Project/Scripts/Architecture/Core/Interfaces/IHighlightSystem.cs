@@ -1,6 +1,5 @@
 ﻿using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Enums;
-using _Project.Scripts.Architecture.Grid.Core;
 
 namespace _Project.Scripts.Architecture.Core.Interfaces
 {

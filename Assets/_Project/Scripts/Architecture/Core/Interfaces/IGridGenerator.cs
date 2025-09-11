@@ -1,5 +1,4 @@
 ﻿using System;
-using _Project.Scripts.Architecture.Grid.Core;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Core.Interfaces

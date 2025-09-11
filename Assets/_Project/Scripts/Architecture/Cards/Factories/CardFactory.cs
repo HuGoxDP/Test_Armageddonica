@@ -2,29 +2,19 @@
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Deck;
 using _Project.Scripts.Architecture.Cards.Runtime;
+using _Project.Scripts.Architecture.Core.Dependency_Injection;
+using _Project.Scripts.Architecture.Core.Interfaces;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Cards.Factories
 {
-    public class CardFactory : MonoBehaviour
+    public class CardFactory : MonoBehaviour, ICardFactory
     {
-        // Відповідає за створення карток 
-        private static CardFactory _instance;
-        public static CardFactory Instance => _instance ??= FindFirstObjectByType<CardFactory>();
-        
         [SerializeField] private CardUI _cardPrefab;
         [SerializeField] private Transform _cardsParent;
-        private void Awake()
+        private void Start()
         {
-            if (_instance != null && _instance != this)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                _instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
+           ServiceLocator.Register<ICardFactory>(this);
         }
         
         public CardUI CreateCardFromDeck(CardDeck cardDeck, int index)

@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Architecture.Cards.Runtime;
+﻿using System.Threading.Tasks;
+using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Grid.Core;
 using UnityEngine;
 
@@ -20,12 +21,12 @@ namespace _Project.Scripts.Architecture.Hand
                 Debug.LogError("GridSystem reference is not assigned in CardPlacementHandler.");
         }
 
-        public bool TryPlaceCard(CardUI card, Vector2 eventDataPosition)
+        public async Task<bool> TryPlaceCard(CardUI card, Vector2 eventDataPosition)
         {
             var worldPosition = _mainCamera.ScreenToWorldPoint(new Vector3(eventDataPosition.x, eventDataPosition.y, _mainCamera.nearClipPlane));
             _eventDataPosition = new Vector3(worldPosition.x, worldPosition.y, 0);
             _gridSystem.UnhighlightedCells();
-            return _gridSystem.TryPlaceCardOnGrid(card, _eventDataPosition);
+            return await _gridSystem.TryPlaceCardOnGrid(card, _eventDataPosition);
         }
 
 

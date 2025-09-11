@@ -1,6 +1,9 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Core.GameStates;
@@ -13,6 +16,9 @@ namespace _Project.Scripts.Architecture.Grid.Core
 {
     public class GridSystem : GameControllable, IGridContext, IGridSystem
     {
+        public event EventHandler<EntityPlacementEventArgs> OnEntityPlaced;
+        public event EventHandler<EntityPlacementEventArgs> OnEntityRemoved;
+        
         public Vector2Int GridSize => new(_width, _height);
         public Vector2 GridOffset => _gridOffset;
         public float CellSize => _cellSize;
@@ -20,9 +26,8 @@ namespace _Project.Scripts.Architecture.Grid.Core
         public IGridCell[,] Cells => _cells;
         public GridCell CellPrefab => _cellPrefab;
 
-        [Header("Grid Configuration")] [SerializeField]
-        private int _width;
-
+        [Header("Grid Configuration")] 
+        [SerializeField] private int _width;
         [SerializeField] private int _height;
         [SerializeField] private float _cellSize;
         [SerializeField] private Vector2 _gridOffset;
@@ -59,6 +64,12 @@ namespace _Project.Scripts.Architecture.Grid.Core
             _components.Values.ToList().ForEach(c => c.IsEnabled = false);
             _components.Clear();
             _isGridGenerated = false;
+           
+            if (_placementSystem != null)
+            {
+                _placementSystem.OnEntityPlaced -= OnEntityPlacementEvent;
+                _placementSystem.OnEntityRemoved -= OnEntityPlacementEvent;
+            }
         }
 
         public void HighlightSuitableCells(CardUI card)
@@ -80,11 +91,12 @@ namespace _Project.Scripts.Architecture.Grid.Core
             }
         }
 
-        public bool TryPlaceCardOnGrid(CardUI card, Vector2 worldPosition)
+        public async Task<bool> TryPlaceCardOnGrid(CardUI card, Vector2 worldPosition)
         {
-            if (!_isGridGenerated) return false;
+            if (!_isGridGenerated || _placementSystem == null) 
+                return false;
 
-            return _placementSystem.TryPlaceCard(card.CardData, worldPosition);
+            return await _placementSystem.TryPlaceCard(card.CardData, worldPosition);
         }
 
         public bool CanPlaceAt(BaseCardData cardData, IGridCell cell)
@@ -162,6 +174,9 @@ namespace _Project.Scripts.Architecture.Grid.Core
             {
                 _placementSystem.Initialize(this);
                 _components.Add(typeof(IPlacementSystem), _placementSystem);
+
+                _placementSystem.OnEntityPlaced += OnEntityPlacementEvent;
+                _placementSystem.OnEntityRemoved += OnEntityPlacementEvent;
             }
 
             if (_highlightSystem != null)
@@ -171,12 +186,26 @@ namespace _Project.Scripts.Architecture.Grid.Core
             }
         }
 
+       
+
         private void OnGridGenerated(object sender, IGridCell[,] e)
         {
             _cells = e;
             _isGridGenerated = true;
             _gridGenerator.OnGridGenerated -= OnGridGenerated;
         }
+        private void OnEntityPlacementEvent(object sender, EntityPlacementEventArgs e)
+        {
+            if (e.IsPlaced)
+            {
+                OnEntityPlaced?.Invoke(this, e);
+            }
+            else
+            {
+                OnEntityRemoved?.Invoke(this, e);
+            }
+        }
+        
 
         protected override void OnGameStateChanged(object sender, GameState newState)
         {
@@ -200,7 +229,6 @@ namespace _Project.Scripts.Architecture.Grid.Core
                     }
                 }
 
-                // Візуалізація початкової точки
                 Gizmos.color = Color.red;
                 Gizmos.DrawSphere(gridWorldOrigin, 0.2f);
             }

@@ -23,3 +23,4 @@ MonoBehaviour:
   <EntityPrefab>k__BackingField: {fileID: 4841167630550787841, guid: 50c7cda577e10ba4c8dfd63a7fd29112, type: 3}
   <Stats>k__BackingField:
     _stats: []
+  _requiredStats: 00000000

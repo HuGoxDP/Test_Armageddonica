@@ -24,29 +24,48 @@ MonoBehaviour:
   <Stats>k__BackingField:
     _stats:
     - <StatType>k__BackingField: 0
-      <Value>k__BackingField: 6
       <Visible>k__BackingField: 1
+      <IsDecimal>k__BackingField: 0
+      <IsConst>k__BackingField: 0
+      _baseValue: 4
     - <StatType>k__BackingField: 1
-      <Value>k__BackingField: 10
       <Visible>k__BackingField: 1
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 10
     - <StatType>k__BackingField: 2
-      <Value>k__BackingField: 2
       <Visible>k__BackingField: 0
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 2
     - <StatType>k__BackingField: 3
-      <Value>k__BackingField: 5
       <Visible>k__BackingField: 1
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 8
     - <StatType>k__BackingField: 4
-      <Value>k__BackingField: 0.6
       <Visible>k__BackingField: 1
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 4
     - <StatType>k__BackingField: 5
-      <Value>k__BackingField: 4
       <Visible>k__BackingField: 1
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 6
     - <StatType>k__BackingField: 6
-      <Value>k__BackingField: 6
-      <Visible>k__BackingField: 1
-    - <StatType>k__BackingField: 7
-      <Value>k__BackingField: 0
-      <Visible>k__BackingField: 1
-    - <StatType>k__BackingField: 8
-      <Value>k__BackingField: 100
       <Visible>k__BackingField: 0
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 10
+    - <StatType>k__BackingField: 7
+      <Visible>k__BackingField: 1
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 0
+    - <StatType>k__BackingField: 8
+      <Visible>k__BackingField: 0
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 80
+  _requiredStats: 0500000000000000

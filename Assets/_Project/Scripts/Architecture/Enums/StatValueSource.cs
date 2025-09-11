@@ -1,4 +1,4 @@
-﻿namespace _Project.Scripts.Architecture.Entities.Base
+﻿namespace _Project.Scripts.Architecture.Enums
 {
     public enum StatValueSource 
     {

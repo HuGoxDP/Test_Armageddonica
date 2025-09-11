@@ -22,3 +22,6 @@ MonoBehaviour:
     +5 \u044E\u043D\u0456\u0442\u0456\u0432. "
   <CardTypeIcon>k__BackingField: {fileID: 21300000, guid: d8104215b308d7d4ab8f2a7cd5eef217, type: 3}
   <CardImage>k__BackingField: {fileID: 21300000, guid: 524f6f1a56f6eb34291145570a562271, type: 3}
+  <SpellPrefab>k__BackingField: {fileID: 4399375214881173652, guid: 8de21f72c5d3110498b13ce1f3caad8e, type: 3}
+  _targetType: 0
+  _requiredStats: 00000000

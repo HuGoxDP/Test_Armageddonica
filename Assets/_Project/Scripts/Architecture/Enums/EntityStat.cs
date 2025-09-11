@@ -1,15 +1,14 @@
 ﻿using System;
-using _Project.Scripts.Architecture.Enums;
 using UnityEngine;
 
-namespace _Project.Scripts.Architecture.Entities.Base
+namespace _Project.Scripts.Architecture.Enums
 {
     [Serializable]
     public class EntityStat
     {
-        [field: SerializeField] public StatType StatType { get; private set; }
-        [field: SerializeField] public bool Visible { get; private set; }
-        [field: SerializeField] public bool IsDecimal { get; private set; }
+        [field: SerializeField] public StatType StatType { get; private set; } = StatType.None;
+        [field: SerializeField] public bool Visible { get; private set; } = true;
+        [field: SerializeField] public bool IsDecimal { get; private set; } = true;
         [field: SerializeField] public bool IsConst { get; private set; } = false;
         
         

@@ -7,7 +7,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
     public abstract class GameControllable : MonoBehaviour, IDisposable
     {
         protected MatchController MatchController { get; private set; }
-        public void SetMatchController(MatchController matchController)
+        public virtual void SetMatchController(MatchController matchController)
         {
             MatchController = matchController;
             MatchController.OnGameStateChanged += OnGameStateChanged;

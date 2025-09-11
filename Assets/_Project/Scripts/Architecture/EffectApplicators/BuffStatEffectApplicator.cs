@@ -1,35 +1,38 @@
 ﻿using System;
 using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Entities.Base;
+using _Project.Scripts.Architecture.Enums;
 using UnityEngine;
 
-namespace _Project.Scripts.Architecture.Entities.Components
+namespace _Project.Scripts.Architecture.EffectApplicators
 {
-    public class BuffStatComponent : BaseEffectApplicatorComponent
+    public class BuffStatEffectApplicator : BasicEffectApplicator
     {
         [field: SerializeField] public RadiusBasedEffectData EffectData { get; private set; }
         
-        
-        public override Task ApplyEffect(EntityEffectManager effectManager)
+        public override StatType[] GetRequiredStats()
         {
-            if (!IsEnabled)
-                return Task.CompletedTask;
+            return new [] { EffectData.StatType };
+        }
+
+        public override Task ApplyEffect(Entity effectApplicator, IEntityEffectManager effectManager)
+        {
             try
             {
                 if (EffectData.Radius == 0)
                 {
-                    entity.ApplyStatModifier(EffectData.StatType, EffectData.CalculationMethod, EffectData.StatValueSource, EffectData.Value);
+                    effectApplicator.ApplyStatModifier(EffectData.StatType, EffectData.CalculationMethod, EffectData.Value);
                 }
                 else
                 {
-                    var entities = effectManager.GetEntitiesInRange(entity.Position, EffectData.Radius, EffectData.StatType);
+                    var entities = effectManager.GetEntitiesInRange(effectApplicator.Position, EffectData.Radius, EffectData.StatType);
                     
                     if (entities != null && entities.Count > 0)
                     {
                         foreach (var targetEntity in entities)
                         {
                             Debug.Log($"Applying effect to {targetEntity.gameObject.name}");
-                            targetEntity.ApplyStatModifier(EffectData.StatType, EffectData.CalculationMethod, EffectData.StatValueSource, EffectData.Value);
+                            targetEntity.ApplyStatModifier(EffectData.StatType, EffectData.CalculationMethod, EffectData.Value);
                         }
                     }
                 }
@@ -42,5 +45,6 @@ namespace _Project.Scripts.Architecture.Entities.Components
             
             return Task.CompletedTask;
         }
+
     }
 }

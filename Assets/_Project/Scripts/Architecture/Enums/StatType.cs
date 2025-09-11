@@ -1,4 +1,5 @@
-﻿namespace _Project.Scripts.Architecture.Enums
+﻿
+namespace _Project.Scripts.Architecture.Enums
 {
     public enum StatType
     {
@@ -11,5 +12,6 @@
         AttackRange = 6,
         CritChancePercent = 7,
         CriticalDamagePercentageMultiplication  = 8,
+        None = -99
     }
 }

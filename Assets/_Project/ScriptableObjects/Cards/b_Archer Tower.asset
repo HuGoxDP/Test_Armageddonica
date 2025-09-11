@@ -25,11 +25,18 @@ MonoBehaviour:
   <Stats>k__BackingField:
     _stats:
     - <StatType>k__BackingField: 5
-      <Value>k__BackingField: 5
       <Visible>k__BackingField: 1
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 25
     - <StatType>k__BackingField: 6
-      <Value>k__BackingField: -1
-      <Visible>k__BackingField: 1
+      <Visible>k__BackingField: 0
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 1
+      _baseValue: -1
     - <StatType>k__BackingField: 4
-      <Value>k__BackingField: 0.25
       <Visible>k__BackingField: 1
+      <IsDecimal>k__BackingField: 1
+      <IsConst>k__BackingField: 0
+      _baseValue: 2
+  _requiredStats: 

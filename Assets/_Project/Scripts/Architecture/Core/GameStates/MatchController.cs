@@ -1,7 +1,7 @@
 ﻿using System;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Deck;
-using _Project.Scripts.Architecture.Entities.Base;
+using _Project.Scripts.Architecture.EffectApplicators;
 using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Grid.Core;
 using _Project.Scripts.Architecture.Hand;
@@ -20,7 +20,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         [SerializeField] private CardDeck _cardDeck;
 
         private GameState _state;
-        private int _turnNumber = 0;
+        private int _turnNumber;
 
         private void Start()
         {

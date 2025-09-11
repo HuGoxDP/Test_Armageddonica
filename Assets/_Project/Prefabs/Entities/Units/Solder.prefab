@@ -173,6 +173,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EffectData>k__BackingField:
-    <ScalableStatType>k__BackingField: 0
-    <MultiplierStatType>k__BackingField: 5
-    <MultiplierValueSource>k__BackingField: 1
+    <ScalableStatType>k__BackingField: 5
+    <MultiplierStatType>k__BackingField: 0
+    <MultiplierValueSource>k__BackingField: 0

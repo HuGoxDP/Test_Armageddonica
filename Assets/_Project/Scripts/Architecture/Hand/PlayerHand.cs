@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.Scripts.Architecture.Cards.Data;
-using _Project.Scripts.Architecture.Cards.Factories;
 using _Project.Scripts.Architecture.Cards.Runtime;
+using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Core.GameStates;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Enums;
@@ -24,7 +24,7 @@ namespace _Project.Scripts.Architecture.Hand
         [SerializeField] private CardPlacementHandler _cardPlacementHandler;
 
         private List<CardUI> _cards;
-        private CardFactory _cardFactory;
+        private ICardFactory _cardFactory;
         
         private Vector3 _originalDraggedCardPosition;
         private float _originalDraggedCardScale;
@@ -35,8 +35,13 @@ namespace _Project.Scripts.Architecture.Hand
         private void Awake()
         {
             _cards = new List<CardUI>();
-            _cardFactory = CardFactory.Instance;
             _layoutController.Initialize(new LinearLayoutStrategy());
+        }
+       
+        private void Start()
+        {
+            _cardFactory ??= ServiceLocator.Get<ICardFactory>();
+
         }
 
         protected override void OnDestroy()
@@ -50,8 +55,12 @@ namespace _Project.Scripts.Architecture.Hand
             }
         }
 
-        protected override void OnGameStateChanged(object sender, GameState newState) =>
-            gameObject.SetActive(newState == GameState.CardPlacementTurn);
+        public override void SetMatchController(MatchController matchController)
+        {
+            base.SetMatchController(matchController);
+            matchController.OnGameStateChanged += OnGameStateChanged;
+            _cardFactory ??= ServiceLocator.Get<ICardFactory>();
+        }
         
         /// <summary> Adds a card to the player's hand. </summary>
         public void AddCard(BaseCardData cardData)
@@ -62,7 +71,7 @@ namespace _Project.Scripts.Architecture.Hand
                 return;
             }
 
-            var card = _cardFactory.CreateCard(cardData);
+            var card = _cardFactory?.CreateCard(cardData);
             if (card == null)
             {
                 Debug.LogWarning("CardFactory failed to create a card.");
@@ -141,40 +150,48 @@ namespace _Project.Scripts.Architecture.Hand
             var newPosition = e.EventData.position;
             card.transform.position = newPosition;
         }
-
-        private void OnCardDraggedEnded(object sender, DragEventArgs e)
+        
+        private async void OnCardDraggedEnded(object sender, DragEventArgs e)
         {
-            var card = e.Card;
+            try
+            {
+                var card = e.Card;
 
-            card.transform.position = _originalDraggedCardPosition;
-            card.transform.localScale = Vector3.one * _originalDraggedCardScale;
-            card.transform.SetSiblingIndex(_originalDraggedCardSiblingIndex);
-            
-            if (_originalDraggedCardCanvasGroup != null)
-            {
-                _originalDraggedCardCanvasGroup.blocksRaycasts = true;
-                _originalDraggedCardCanvasGroup.alpha = 1f;
-            }
-            
-            if (_cardPlacementHandler.TryPlaceCard(card, e.EventData.position))
-            {
+                card.transform.position = _originalDraggedCardPosition;
+                card.transform.localScale = Vector3.one * _originalDraggedCardScale;
+                card.transform.SetSiblingIndex(_originalDraggedCardSiblingIndex);
+
+                if (_originalDraggedCardCanvasGroup != null)
+                {
+                    _originalDraggedCardCanvasGroup.blocksRaycasts = true;
+                    _originalDraggedCardCanvasGroup.alpha = 1f;
+                }
+
+                var placed = await _cardPlacementHandler.TryPlaceCard(card, e.EventData.position);
+                if (placed)
+                {
+                    _originalDraggedCardCanvasGroup = null;
+                    _originalDraggedCardScale = 0;
+                    _originalDraggedCardPosition = Vector3.zero;
+                    _originalDraggedCardSiblingIndex = -1;
+
+                    _isCardDragging = false;
+                    RemoveCard(card);
+                    MatchController.NextTurn();
+                    return;
+                }
+
+                _isCardDragging = false;
+                _layoutController.UpdateHoverLayout(GetCardIndex(card));
                 _originalDraggedCardCanvasGroup = null;
                 _originalDraggedCardScale = 0;
                 _originalDraggedCardPosition = Vector3.zero;
                 _originalDraggedCardSiblingIndex = -1;
-                
-                _isCardDragging = false;
-                RemoveCard(card);
-                MatchController.NextTurn();
-                return;
             }
-            _isCardDragging = false;
-            _layoutController.UpdateHoverLayout(GetCardIndex(card));
-            _originalDraggedCardCanvasGroup = null;
-            _originalDraggedCardScale = 0;
-            _originalDraggedCardPosition = Vector3.zero;
-            _originalDraggedCardSiblingIndex = -1;
-
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
         }
 
         private void OnCardHovered(object sender, CardUI e)
@@ -184,5 +201,7 @@ namespace _Project.Scripts.Architecture.Hand
             _layoutController.UpdateHoverLayout(GetCardIndex(e));
         }
 
+        protected override void OnGameStateChanged(object sender, GameState newState) =>
+            gameObject.SetActive(newState == GameState.CardPlacementTurn);
     }
 }

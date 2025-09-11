@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Entities.Base;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace _Project.Scripts.Architecture.Core.Interfaces
     {
         List<Entity> GetEntitiesInRange(Vector2Int position, int range);
         void HighlightSuitableCells(CardUI card);
-        bool TryPlaceCardOnGrid(CardUI card, Vector2 worldPosition);
+        Task<bool> TryPlaceCardOnGrid(CardUI card, Vector2 worldPosition);
         void UnhighlightedCells();
         
     }
