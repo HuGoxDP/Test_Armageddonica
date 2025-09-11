@@ -1,7 +1,8 @@
 ﻿using System;
+using _Project.Scripts.Architecture.Enums;
 using UnityEngine;
 
-namespace _Project.Scripts.Architecture.Enums
+namespace _Project.Scripts.Architecture.Entities.Base
 {
     [Serializable]
     public class EntityStat
@@ -11,9 +12,9 @@ namespace _Project.Scripts.Architecture.Enums
         [field: SerializeField] public bool IsDecimal { get; private set; } = true;
         [field: SerializeField] public bool IsConst { get; private set; } = false;
         
-        
         [field: SerializeField] private float _baseValue;
         
+        private float _currentValue;
         
         public float BaseValue
         {
@@ -47,6 +48,5 @@ namespace _Project.Scripts.Architecture.Enums
             }
         }
 
-        private float _currentValue;
     }
 }

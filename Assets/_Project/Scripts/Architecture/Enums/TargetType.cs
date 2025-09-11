@@ -1,4 +1,4 @@
-﻿namespace _Project.Scripts.Architecture.Cards.Data
+﻿namespace _Project.Scripts.Architecture.Enums
 {
     public enum TargetType
     {

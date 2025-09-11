@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Entities.Base;
 using _Project.Scripts.Architecture.Enums;
 using UnityEditor;

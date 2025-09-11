@@ -2,7 +2,7 @@
 using _Project.Scripts.Architecture.Entities.Base;
 using UnityEngine;
 
-namespace _Project.Scripts.Architecture.Entities
+namespace _Project.Scripts.Architecture.Core.Interfaces
 {
     public interface IEntityFactory
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Core.Dependency_Injection;
+using _Project.Scripts.Architecture.Core.Interfaces;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Spell

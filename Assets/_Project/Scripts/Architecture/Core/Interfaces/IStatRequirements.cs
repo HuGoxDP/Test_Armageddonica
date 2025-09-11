@@ -1,6 +1,6 @@
 ﻿using _Project.Scripts.Architecture.Enums;
 
-namespace _Project.Scripts.Architecture.Cards.Data
+namespace _Project.Scripts.Architecture.Core.Interfaces
 {
     public interface IStatRequirements
     {
