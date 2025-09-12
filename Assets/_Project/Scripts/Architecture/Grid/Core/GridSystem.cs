@@ -60,8 +60,8 @@ namespace _Project.Scripts.Architecture.Grid.Core
 
         private void Start()
         {
+            ServiceLocator.Register(this);
             _gridGenerator?.GenerateGrid();
-            
             _statsTooltipUI = ServiceLocator.Get<StatsTooltipUI>();
             if (_statsTooltipUI == null) Debug.LogError("StatsTooltipUI reference is not assigned in GridSystem.");
         }
@@ -90,14 +90,9 @@ namespace _Project.Scripts.Architecture.Grid.Core
 
         public void UnhighlightedCells()
         {
-            for (int x = 0; x < _width; x++)
-            {
-                for (int y = 0; y < _height; y++)
-                {
-                    var cell = _cells[x, y];
-                    _highlightSystem.ClearHighlight(cell);
-                }
-            }
+           if (!_isGridGenerated) return;
+            
+           _highlightSystem.UnhighlightedCells();
         }
 
         public async Task<bool> TryPlaceCardOnGrid(CardUI card, Vector2 worldPosition)
@@ -214,8 +209,8 @@ namespace _Project.Scripts.Architecture.Grid.Core
             if(_statsTooltipUI == null) return;
             if (cell.IsOccupied && _isEnableTooltips)
             {
-                _statsTooltipUI.SetTooltip(cell.OccupiedEntity);
                 _statsTooltipUI.ShowTooltip();
+                _statsTooltipUI.SetTooltip(cell.OccupiedEntity);
             }
         }
 
@@ -249,6 +244,7 @@ namespace _Project.Scripts.Architecture.Grid.Core
             _isGridGenerated = true;
             _gridGenerator.OnGridGenerated -= OnGridGenerated;
         }
+        
         private void OnEntityPlacementEvent(object sender, EntityPlacementEventArgs e)
         {
             if (e.IsPlaced)
@@ -264,6 +260,7 @@ namespace _Project.Scripts.Architecture.Grid.Core
 
         protected override void OnGameStateChanged(object sender, GameState newState)
         {
+            EnableTooltips(newState == GameState.CardPlacementTurn);
         }
 
 
