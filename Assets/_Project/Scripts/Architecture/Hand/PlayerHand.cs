@@ -25,7 +25,6 @@ namespace _Project.Scripts.Architecture.Hand
 
         private List<CardUI> _cards;
         private ICardFactory _cardFactory;
-        
         private Vector3 _originalDraggedCardPosition;
         private float _originalDraggedCardScale;
         private CanvasGroup _originalDraggedCardCanvasGroup;
@@ -79,7 +78,7 @@ namespace _Project.Scripts.Architecture.Hand
                 return;
             }
 
-            if (card.TryGetComponent<CardInteractionHandler>(out var interactionHandler))
+            if (card.TryGetComponent<CardEventHandler>(out var interactionHandler))
             {
                 interactionHandler.OnCardDragStarted += OnCardDraggedStarted;
                 interactionHandler.OnCardDragged += OnCardDragged;
@@ -107,7 +106,7 @@ namespace _Project.Scripts.Architecture.Hand
                 return;
             }
             
-            if (card.TryGetComponent<CardInteractionHandler>(out var interactionHandler))
+            if (card.TryGetComponent<CardEventHandler>(out var interactionHandler))
             {
                 interactionHandler.OnCardDragStarted -= OnCardDraggedStarted;
                 interactionHandler.OnCardDragged -= OnCardDragged;

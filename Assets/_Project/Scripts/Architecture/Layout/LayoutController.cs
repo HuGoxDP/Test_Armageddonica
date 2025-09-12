@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using PrimeTween;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace _Project.Scripts.Architecture.Layout
     /// <remarks> Attach this script to an empty GameObject that will serve as the parent for the objects to be laid out. </remarks>
     public class LayoutController : MonoBehaviour
     {
+        public bool IsInitialized() => _isInitialized;
+        
         [SerializeField] private LayoutSettings _layoutSettings;
         
         private ILayoutStrategy _layoutStrategy;
@@ -74,8 +77,7 @@ namespace _Project.Scripts.Architecture.Layout
             if(!_isInitialized) return;
             
             _transforms.Add(t);
-            t.localPosition = new Vector3(400, t.position.y - 100, t.position.z);
-            UpdateLayout();
+            StartCoroutine(UpdateLayoutDelayed());
         }
 
         public void RemoveCard(Transform t)
@@ -85,7 +87,7 @@ namespace _Project.Scripts.Architecture.Layout
             _transforms.Remove(t);
             UpdateLayout();
         }
-
+        
         public void SetCards(IReadOnlyList<Transform> transforms)
         {
             if(!_isInitialized) return;
@@ -105,10 +107,16 @@ namespace _Project.Scripts.Architecture.Layout
                 {
                     if (cardTransform.localPosition == targetPosition) continue;
                     
-                    Tween.LocalPosition(cardTransform, targetPosition, 0.1f, Ease.InOutCubic);
-                    cardTransform.localPosition = targetPosition;
+                    // Анимируем перемещение без немедленного установления позиции
+                    Tween.LocalPosition(cardTransform, targetPosition, 0.3f, Ease.OutBack);
                 }
             }
+        }
+        
+        private IEnumerator UpdateLayoutDelayed()
+        {
+            yield return null; 
+            UpdateLayout();
         }
     }
 }
