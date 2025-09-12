@@ -16,33 +16,71 @@ namespace _Project.Scripts.Architecture.Entities.Base
 
         private Dictionary<StatType, int> _statIndexMap;
 
+        public StatsContainer(StatsContainer other)
+        {
+            if (other._stats != null)
+            {
+                _stats = new StatData[other._stats.Length];
+                for (int i = 0; i < other._stats.Length; i++)
+                {
+                    _stats[i] = new StatData(
+                        other._stats[i].StatType,
+                        other._stats[i].BaseValue,
+                        other._stats[i].Visible,
+                        other._stats[i].IsDecimal,
+                        other._stats[i].IsConst
+                    );
+
+                }
+            }
+            InitializeStatsDictionary();
+        }
+        
+        public StatsContainer Clone()
+        {
+            return new StatsContainer(this);
+        }
+
+        
         /// <summary> Returns stat value. </summary>
         public float GetStat(StatType type, StatValueSource source)
         {
-            InitializeStatsDictionary();
-
+            if (_statIndexMap == null)
+            {
+                InitializeStatsDictionary();
+            }
+            
             if (_statIndexMap.TryGetValue(type, out int index))
             {
                 return source == StatValueSource.Base ? _stats[index].BaseValue : _stats[index].CurrentValue;
             }
-            
+
             return 0f;
         }
-        
+
         /// <summary> Sets stat value. </summary>
         public void SetStat(StatType type, float value)
         {
+            if (_statIndexMap == null)
+            {
+                InitializeStatsDictionary();
+            }
+            
             if (_statIndexMap.TryGetValue(type, out int index) && !_stats[index].IsConst)
             {
                 _stats[index].CurrentValue = value;
                 OnStatChanged?.Invoke(type, value);
             }
         }
-        
+
         /// <summary> Returns true if stat exists. </summary>
         public bool HasStat(StatType statType)
         {
-            InitializeStatsDictionary();
+            if (_statIndexMap == null)
+            {
+                InitializeStatsDictionary();
+            }
+            
             return _statIndexMap.ContainsKey(statType);
         }
 
@@ -57,20 +95,23 @@ namespace _Project.Scripts.Architecture.Entities.Base
 
             return sb.ToString();
         }
-        
+
         /// <summary> Applies stat modifier. </summary>
         public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod, float value)
         {
-            InitializeStatsDictionary();
-            
+            if (_statIndexMap == null)
+            {
+                InitializeStatsDictionary();
+            }
+
             if (!_statIndexMap.TryGetValue(statType, out var stat))
             {
                 Debug.LogError($"Stat {statType} not found in EntityStatsContainer");
                 return;
             }
-            
+
             var statValue = GetStat(statType, StatValueSource.Current);
-            
+
             switch (calculationMethod)
             {
                 case CalculationMethod.Flat:
@@ -82,20 +123,17 @@ namespace _Project.Scripts.Architecture.Entities.Base
                 default:
                     throw new ArgumentOutOfRangeException(nameof(calculationMethod), calculationMethod, null);
             }
-            
+
             SetStat(statType, statValue);
         }
-        
+
         private void InitializeStatsDictionary()
         {
-            if (_statIndexMap == null)
+            _statIndexMap = new Dictionary<StatType, int>();
+            for (int i = 0; i < _stats.Length; i++)
             {
-                _statIndexMap = new Dictionary<StatType, int>();
-                for (int i = 0; i < _stats.Length; i++)
-                {
-                    _statIndexMap[_stats[i].StatType] = i;
-                    _stats[i].CurrentValue = _stats[i].BaseValue;
-                }
+                _statIndexMap[_stats[i].StatType] = i;
+                _stats[i].CurrentValue = _stats[i].BaseValue;
             }
         }
     }

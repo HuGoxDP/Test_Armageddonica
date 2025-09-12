@@ -5,6 +5,7 @@ using _Project.Scripts.Architecture.EffectApplicators;
 using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Grid.Core;
 using _Project.Scripts.Architecture.Hand;
+using _Project.Scripts.Architecture.SelectCardMenu;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -17,8 +18,9 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         [SerializeField] private GridSystem _gridSystem;
         [SerializeField] private PlayerHand _playerHolder;
         [SerializeField] private EntityEffectManager _entityEffectManager;
-        [SerializeField] private CardDeck _cardDeck;
-
+        [SerializeField] private SelectCardMenu.SelectCardMenu _selectCardMenu;
+        
+        private ICardGeneratorStrategy _generatorStrategy;
         private GameState _state;
         private int _turnNumber;
 
@@ -31,6 +33,8 @@ namespace _Project.Scripts.Architecture.Core.GameStates
             _playerHolder.SetMatchController(this);
             _gridSystem.SetMatchController(this);
             _entityEffectManager.SetMatchController(this);
+            _selectCardMenu.SetMatchController(this);
+            _generatorStrategy ??= new CardGeneratorStrategy();
         }
         
         public void UpdateGameState(GameState newState)
@@ -46,8 +50,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
                 case GameState.CardSelectionTurn:
                     //TODO: Implement card selection logic
                     _turnNumber++;
-                    AddCardsToPlayerHand(_turnNumber == 1 ? 3 : 1); 
-                    NextTurn();
+                    GenerateCards();
                     break;
                 case GameState.CardPlacementTurn:
                     break;
@@ -60,6 +63,24 @@ namespace _Project.Scripts.Architecture.Core.GameStates
             }
             
             OnGameStateChanged?.Invoke(this, _state);
+        }
+
+        private void GenerateCards()
+        {
+            if (_turnNumber == 1)
+            {
+               var cards = _generatorStrategy.GenerateCards(_selectCardMenu.CardDeck, 3);
+               foreach (var card in cards)
+               {
+                   _playerHolder.AddCard(card);
+               }
+               NextTurn();
+            }
+            else
+            {
+                _selectCardMenu.gameObject.SetActive(true);
+                _selectCardMenu.GenerateCards(_generatorStrategy, 3);   
+            }
         }
 
         private async void BuffTurn()
@@ -100,39 +121,6 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         private void RecalculateArmyStrength()
         {
             // TODO: Перерахувати загальну силу армії
-        }
-        
-        [Button("TEST Add Card To Hand")]
-        private void TestAddCardToHand() => AddSingleCardToPlayerHand();
-        
-        private void AddCardsToPlayerHand(int numberOfCards)
-        {
-            if (_cardDeck == null || _playerHolder == null) return;
-            
-            for (int i = 0; i < numberOfCards; i++)
-            {
-                AddSingleCardToPlayerHand();
-            }
-        }
-        
-        private void AddSingleCardToPlayerHand()
-        {
-            if (_cardDeck == null || _playerHolder == null) return;
-            
-            var cardData = GetRandomCardFromDeck(_cardDeck);
-            _playerHolder.AddCard(cardData);
-        }
-
-        private BaseCardData GetRandomCardFromDeck(CardDeck cardDeck)
-        {
-            if (cardDeck.Cards.Count == 0)
-            {
-                Debug.LogWarning("Card deck is empty.");
-                return null;
-            }
-
-            var randomIndex = UnityEngine.Random.Range(0, cardDeck.Cards.Count);
-            return cardDeck.Cards[randomIndex];
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Core.GameStates;
@@ -45,13 +46,8 @@ namespace _Project.Scripts.Architecture.EffectApplicators
             if (!_entitiesByStatType.TryGetValue(statType, out var entitiesWithStat) || entitiesWithStat.Count == 0)
                 return null;
 
-            var result = new List<Entity>(Mathf.Min(entitiesInRange.Count, entitiesWithStat.Count));
-            
-            foreach (var entity in entitiesInRange)
-            {
-                if (entitiesWithStat.Contains(entity))
-                    result.Add(entity);
-            }
+            var result = new List<Entity>(entitiesInRange.Count);
+            result.AddRange(entitiesInRange.Where(entity => entitiesWithStat.Contains(entity)));
 
             return result.Count > 0 ? result : null;
         }

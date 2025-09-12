@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using _Project.Scripts.Architecture.Core.Interfaces;
+using PrimeTween;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Layout
@@ -19,6 +20,7 @@ namespace _Project.Scripts.Architecture.Layout
         {
             _transforms = new List<Transform>();
             _positionCache = new Dictionary<Transform, Vector3>();
+            PrimeTweenConfig.warnEndValueEqualsCurrent = false;
         }
         
         private void OnDestroy()
@@ -72,6 +74,7 @@ namespace _Project.Scripts.Architecture.Layout
             if(!_isInitialized) return;
             
             _transforms.Add(t);
+            t.localPosition = new Vector3(400, t.position.y - 100, t.position.z);
             UpdateLayout();
         }
 
@@ -100,6 +103,9 @@ namespace _Project.Scripts.Architecture.Layout
                 var cardTransform = _transforms[i];
                 if (positions.TryGetValue(cardTransform, out var targetPosition))
                 {
+                    if (cardTransform.localPosition == targetPosition) continue;
+                    
+                    Tween.LocalPosition(cardTransform, targetPosition, 0.1f, Ease.InOutCubic);
                     cardTransform.localPosition = targetPosition;
                 }
             }

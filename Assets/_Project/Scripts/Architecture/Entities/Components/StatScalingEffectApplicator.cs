@@ -30,9 +30,19 @@ namespace _Project.Scripts.Architecture.Entities.Components
 
             if (!IsEnabled)
                 return Task.CompletedTask;
-
             try
             {
+                if (EffectData == null)
+                {
+                    Debug.LogError("EffectData is null in StatScalingEffectApplicator");
+                    return Task.CompletedTask;
+                }
+
+                if (effectApplicator == null)
+                {
+                    Debug.LogError("effectApplicator is null in StatScalingEffectApplicator");
+                    return Task.CompletedTask;
+                }
                 
                 var baseValue = effectApplicator.GetStat(EffectData.ScalableStatType, EffectData.ScalableBaseValueSource);
                 var multiplierValue = effectApplicator.GetStat(EffectData.MultiplierStatType, EffectData.MultiplierValueSource);

@@ -22,10 +22,10 @@ namespace _Project.Scripts.Architecture.Entities.Base
         private List<IEffectApplicator> _cachedEffectApplicators;
 
 
-        public void Initialize(EntityCardData cardData)
+        public void Initialize(EntityCardData cardData, StatsContainer statsCopy)
         {
             CardData = cardData;
-            Stats = cardData.Stats;
+            Stats = statsCopy; 
             InitializeComponents();
             UpdateStats();
         }
@@ -47,6 +47,12 @@ namespace _Project.Scripts.Architecture.Entities.Base
 
         public float GetStat(StatType statType, StatValueSource statValueSource = StatValueSource.Current)
         {
+            if (Stats == null)
+            {
+                Debug.LogError("Stats container is null in Entity");
+                return 0;
+            }
+            
             return Stats.GetStat(statType, statValueSource);
         }
 

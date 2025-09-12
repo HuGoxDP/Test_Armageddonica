@@ -31,5 +31,14 @@ namespace _Project.Scripts.Architecture.Entities.Base
                 OnValueChanged?.Invoke(StatType, value);
             }
         }
+
+        public StatData(StatType statType, float baseValue, bool visible = true, bool isDecimal = true, bool isConst = false)
+        {
+            StatType = statType;
+            Visible = visible;
+            IsDecimal = isDecimal;
+            IsConst = isConst;
+            _baseValue = baseValue;
+        }
     }
 }

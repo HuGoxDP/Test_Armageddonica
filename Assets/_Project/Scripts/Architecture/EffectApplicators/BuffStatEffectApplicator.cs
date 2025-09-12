@@ -20,6 +20,24 @@ namespace _Project.Scripts.Architecture.EffectApplicators
         {
             try
             {
+                if (EffectData == null)
+                {
+                    Debug.LogError("EffectData is null in BuffStatEffectApplicator");
+                    return Task.CompletedTask;
+                }
+
+                if (effectApplicator == null)
+                {
+                    Debug.LogError("effectApplicator is null in BuffStatEffectApplicator");
+                    return Task.CompletedTask;
+                }
+
+                if (effectManager == null)
+                {
+                    Debug.LogError("effectManager is null in BuffStatEffectApplicator");
+                    return Task.CompletedTask;
+                }
+                
                 if (EffectData.Radius == 0)
                 {
                     effectApplicator.ApplyStatModifier(EffectData.StatType, EffectData.CalculationMethod, EffectData.Value);
@@ -32,7 +50,6 @@ namespace _Project.Scripts.Architecture.EffectApplicators
                     {
                         foreach (var targetEntity in entities)
                         {
-                            Debug.Log($"Applying effect to {targetEntity.gameObject.name}");
                             targetEntity.ApplyStatModifier(EffectData.StatType, EffectData.CalculationMethod, EffectData.Value);
                         }
                     }

@@ -20,9 +20,10 @@ namespace _Project.Scripts.Architecture.Entities.Factories
             var prefab = cardData.EntityPrefab;
             if (prefab == null)
                 throw new ArgumentNullException(nameof(cardData.EntityPrefab), "Entity prefab cannot be null");
-            
+
+            var statsCopy = cardData.Stats.Clone();
             var entity = Instantiate(prefab, cellTransform.position, Quaternion.identity, _entityContainer);
-            entity.Initialize(cardData);
+            entity.Initialize(cardData, statsCopy);
             return entity;
         }
     }
