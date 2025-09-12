@@ -30,8 +30,9 @@ namespace _Project.Scripts.Architecture.Hand
         private float _originalDraggedCardScale;
         private CanvasGroup _originalDraggedCardCanvasGroup;
         private int _originalDraggedCardSiblingIndex;
-
+        private CardUI _hoveredCard;
         private bool _isCardDragging;
+        
         private void Awake()
         {
             _cards = new List<CardUI>();
@@ -71,7 +72,7 @@ namespace _Project.Scripts.Architecture.Hand
                 return;
             }
 
-            var card = _cardFactory?.CreateCard(cardData);
+            var card = _cardFactory?.CreateCard(cardData, _layoutController.transform);
             if (card == null)
             {
                 Debug.LogWarning("CardFactory failed to create a card.");
@@ -197,7 +198,8 @@ namespace _Project.Scripts.Architecture.Hand
         private void OnCardHovered(object sender, CardUI e)
         {
             if (_isCardDragging) return;
-            
+            if (_hoveredCard != null && _hoveredCard == e) return;
+            _hoveredCard = e;
             _layoutController.UpdateHoverLayout(GetCardIndex(e));
         }
 

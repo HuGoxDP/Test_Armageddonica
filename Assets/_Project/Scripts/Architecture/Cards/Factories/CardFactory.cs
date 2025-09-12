@@ -11,13 +11,12 @@ namespace _Project.Scripts.Architecture.Cards.Factories
     public class CardFactory : MonoBehaviour, ICardFactory
     {
         [SerializeField] private CardUI _cardPrefab;
-        [SerializeField] private Transform _cardsParent;
         private void Start()
         {
            ServiceLocator.Register<ICardFactory>(this);
         }
         
-        public CardUI CreateCardFromDeck(CardDeck cardDeck, int index)
+        public CardUI CreateCardFromDeck(CardDeck cardDeck, int index, Transform parent)
         {
             if (cardDeck == null)
             {
@@ -30,10 +29,10 @@ namespace _Project.Scripts.Architecture.Cards.Factories
             }
 
             var cardData = cardDeck.Cards[index];
-            return CreateCard(cardData);
+            return CreateCard(cardData, parent);
         }
 
-        public CardUI CreateCardFromDeck(CardDeck cardDeck)
+        public CardUI CreateCardFromDeck(CardDeck cardDeck, Transform parent)
         {
             if (cardDeck == null)
             {
@@ -45,17 +44,17 @@ namespace _Project.Scripts.Architecture.Cards.Factories
             }
             var randomIndex = UnityEngine.Random.Range(0, cardDeck.Cards.Count);
             var cardData = cardDeck.Cards[randomIndex];
-            return CreateCard(cardData);
+            return CreateCard(cardData, parent);
         }
         
-        public CardUI CreateCard(BaseCardData cardData)
+        public CardUI CreateCard(BaseCardData cardData, Transform parent)
         {
             if (cardData == null)
             {
                 throw new ArgumentNullException(nameof(cardData), "Card data cannot be null");
             }
 
-            var cardInstance = Instantiate(_cardPrefab, _cardsParent);
+            var cardInstance = Instantiate(_cardPrefab, parent);
             cardInstance.SetCardData(cardData);
             return cardInstance;
         }
