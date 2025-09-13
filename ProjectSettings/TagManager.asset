@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags: []
   layers:
   - Default
@@ -14,7 +14,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - GridCell
   - 
   - 
   - 
@@ -38,6 +38,17 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Back
+    uniqueID: 2863689815
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Mid
+    uniqueID: 1459054443
+    locked: 0
+  - name: Front
+    uniqueID: 583341425
+    locked: 0
+  m_RenderingLayers:
+  - Default

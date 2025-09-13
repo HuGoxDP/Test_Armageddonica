@@ -4,7 +4,7 @@ using _Project.Scripts.Architecture.Cards.Runtime;
 
 namespace _Project.Scripts.Architecture.Core.Interfaces
 {
-    interface IPlayerHand
+    public interface IPlayerHand
     {
         public event System.EventHandler<CardUI> OnCardAdded;
         public event System.EventHandler<CardUI> OnCardRemoved;

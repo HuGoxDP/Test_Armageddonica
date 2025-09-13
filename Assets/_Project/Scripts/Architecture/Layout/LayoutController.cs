@@ -1,7 +1,7 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using _Project.Scripts.Architecture.Core.Interfaces;
+using PrimeTween;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Layout
@@ -10,6 +10,8 @@ namespace _Project.Scripts.Architecture.Layout
     /// <remarks> Attach this script to an empty GameObject that will serve as the parent for the objects to be laid out. </remarks>
     public class LayoutController : MonoBehaviour
     {
+        public bool IsInitialized() => _isInitialized;
+        
         [SerializeField] private LayoutSettings _layoutSettings;
         
         private ILayoutStrategy _layoutStrategy;
@@ -21,6 +23,7 @@ namespace _Project.Scripts.Architecture.Layout
         {
             _transforms = new List<Transform>();
             _positionCache = new Dictionary<Transform, Vector3>();
+            PrimeTweenConfig.warnEndValueEqualsCurrent = false;
         }
         
         private void OnDestroy()
@@ -74,7 +77,7 @@ namespace _Project.Scripts.Architecture.Layout
             if(!_isInitialized) return;
             
             _transforms.Add(t);
-            UpdateLayout();
+            StartCoroutine(UpdateLayoutDelayed());
         }
 
         public void RemoveCard(Transform t)
@@ -84,7 +87,7 @@ namespace _Project.Scripts.Architecture.Layout
             _transforms.Remove(t);
             UpdateLayout();
         }
-
+        
         public void SetCards(IReadOnlyList<Transform> transforms)
         {
             if(!_isInitialized) return;
@@ -102,9 +105,18 @@ namespace _Project.Scripts.Architecture.Layout
                 var cardTransform = _transforms[i];
                 if (positions.TryGetValue(cardTransform, out var targetPosition))
                 {
-                    cardTransform.localPosition = targetPosition;
+                    if (cardTransform.localPosition == targetPosition) continue;
+                    
+                    // Анимируем перемещение без немедленного установления позиции
+                    Tween.LocalPosition(cardTransform, targetPosition, 0.3f, Ease.OutBack);
                 }
             }
+        }
+        
+        private IEnumerator UpdateLayoutDelayed()
+        {
+            yield return null; 
+            UpdateLayout();
         }
     }
 }

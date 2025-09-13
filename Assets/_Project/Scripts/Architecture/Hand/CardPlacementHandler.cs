@@ -1,17 +1,31 @@
-﻿using _Project.Scripts.Architecture.Cards.Runtime;
-using _Project.Scripts.Architecture.Grid.Core;
+﻿using System;
+using System.Threading.Tasks;
+using _Project.Scripts.Architecture.Cards.Runtime;
+using _Project.Scripts.Architecture.Core.Dependency_Injection;
+using _Project.Scripts.Architecture.Core.DropZones;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Hand
 {
-    /// <summary> Handles the placement of cards onto the grid. </summary>
     public class CardPlacementHandler: MonoBehaviour
     {
-        [SerializeField] private GridSystem _gridSystem;
+        private DropZoneManager _dropZoneManager;
 
-        public bool TryPlaceCard(CardUI eCard, Vector2 eventDataPosition)
+        private void Start()
         {
-            throw new System.NotImplementedException();
+            _dropZoneManager ??= ServiceLocator.Get<DropZoneManager>();
+            
+        }
+
+        public async Task<bool> TryPlaceCard(CardUI card, Vector2 eventDataPosition)
+        {
+            _dropZoneManager.EndDragPreview();
+            return await _dropZoneManager.TryDropCard(card, eventDataPosition);
+        }
+
+        public void StartPlacingCard(CardUI card)
+        {
+            _dropZoneManager.StartDragPreview(card);
         }
     }
 }

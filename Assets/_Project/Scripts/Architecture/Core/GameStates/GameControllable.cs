@@ -1,4 +1,5 @@
 ﻿using System;
+using _Project.Scripts.Architecture.Enums;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Core.GameStates
@@ -6,7 +7,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
     public abstract class GameControllable : MonoBehaviour, IDisposable
     {
         protected MatchController MatchController { get; private set; }
-        public void SetMatchController(MatchController matchController)
+        public virtual void SetMatchController(MatchController matchController)
         {
             MatchController = matchController;
             MatchController.OnGameStateChanged += OnGameStateChanged;
@@ -20,7 +21,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         {
             Dispose();
         }
-        
-        public abstract void OnGameStateChanged(object sender, GameState newState);
+
+        protected abstract void OnGameStateChanged(object sender, GameState newState);
     }
 }
