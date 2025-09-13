@@ -15,7 +15,7 @@ namespace _Project.Scripts.Architecture.Entities.Base
         [field: SerializeField] public bool IsConst { get; private set; } = false;
 
         [field: SerializeField] private float _baseValue;
-
+        
         private float _currentValue;
         
         public float BaseValue => _baseValue;

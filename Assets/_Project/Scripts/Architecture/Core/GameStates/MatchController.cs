@@ -1,6 +1,7 @@
 ﻿using System;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Deck;
+using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.EffectApplicators;
 using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Grid.Core;
@@ -19,6 +20,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         [SerializeField] private PlayerHand _playerHolder;
         [SerializeField] private EntityEffectManager _entityEffectManager;
         [SerializeField] private SelectCardMenu.SelectCardMenu _selectCardMenu;
+        [SerializeField] private ArmyStatUI _armyStatUI;
         
         private ICardGeneratorStrategy _generatorStrategy;
         private GameState _state;
@@ -120,7 +122,7 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         
         private void RecalculateArmyStrength()
         {
-            // TODO: Перерахувати загальну силу армії
+            _armyStatUI.CalculateStrength(_gridSystem);
         }
     }
 }

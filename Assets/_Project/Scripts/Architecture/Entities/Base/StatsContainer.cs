@@ -41,6 +41,10 @@ namespace _Project.Scripts.Architecture.Entities.Base
             return new StatsContainer(this);
         }
 
+        public IEnumerable<StatData> GetStats()
+        {
+            return _stats;
+        }
         
         /// <summary> Returns stat value. </summary>
         public float GetStat(StatType type, StatValueSource source)

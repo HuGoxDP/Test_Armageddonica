@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.Scripts.Architecture.Cards.Data;
+using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Enums;
 using NaughtyAttributes;
@@ -10,11 +11,12 @@ namespace _Project.Scripts.Architecture.Entities.Base
 {
     public sealed class Entity : MonoBehaviour, IGridPlaceable
     {
-        [field: SerializeField, ReadOnly, TextArea(3, 9), Space(20)] public string StatsLabel { get; private set; }
-        
+        [field: SerializeField, ReadOnly, TextArea(3, 9), Space(20)]
+        public string StatsLabel { get; private set; }
+
         public Vector2Int Position { get; private set; }
         public EntityCardData CardData { get; private set; }
-        
+
         private StatsContainer Stats { get; set; }
         private Dictionary<Type, IComponent> Components { get; set; }
         private Dictionary<Type, IEffectApplicator> EffectApplicators { get; set; }
@@ -25,7 +27,7 @@ namespace _Project.Scripts.Architecture.Entities.Base
         public void Initialize(EntityCardData cardData, StatsContainer statsCopy)
         {
             CardData = cardData;
-            Stats = statsCopy; 
+            Stats = statsCopy;
             InitializeComponents();
             UpdateStats();
         }
@@ -52,11 +54,11 @@ namespace _Project.Scripts.Architecture.Entities.Base
                 Debug.LogError("Stats container is null in Entity");
                 return 0;
             }
-            
+
             return Stats.GetStat(statType, statValueSource);
         }
 
-        public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod,  float value)
+        public void ApplyStatModifier(StatType statType, CalculationMethod calculationMethod, float value)
         {
             Stats.ApplyStatModifier(statType, calculationMethod, value);
             UpdateStats();
@@ -108,12 +110,25 @@ namespace _Project.Scripts.Architecture.Entities.Base
                     iComponent.Initialize(this);
                     Components.Add(component.GetType(), iComponent);
                 }
-        
+
                 if (component is IEffectApplicator effectApplicator)
                 {
                     EffectApplicators.Add(component.GetType(), effectApplicator);
                 }
             }
+        }
+
+        public float RecalculateStrength()
+        {
+            var statMultiplier = ServiceLocator.Get<StatMultiplierConfig>();
+            float strength = 0;
+            foreach (var stat in Stats.GetStats())
+            {
+                var statStrength = stat.CurrentValue * statMultiplier.GetMultiplier(stat.StatType);
+                strength += statStrength;
+            }
+
+            return strength;
         }
     }
 }

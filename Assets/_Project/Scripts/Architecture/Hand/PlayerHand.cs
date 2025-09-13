@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _Project.Scripts.Architecture.Cards;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Core.Dependency_Injection;
@@ -34,6 +35,7 @@ namespace _Project.Scripts.Architecture.Hand
         
         private void Awake()
         {
+            ServiceLocator.Register<IPlayerHand>(this);
             _cards = new List<CardUI>();
             _layoutController.Initialize(new LinearLayoutStrategy());
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Deck;
+using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Enums;
 using UnityEngine;
 

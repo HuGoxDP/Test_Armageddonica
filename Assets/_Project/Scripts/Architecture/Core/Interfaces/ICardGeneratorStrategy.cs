@@ -2,7 +2,7 @@
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Cards.Deck;
 
-namespace _Project.Scripts.Architecture.SelectCardMenu
+namespace _Project.Scripts.Architecture.Core.Interfaces
 {
     public interface ICardGeneratorStrategy
     {

@@ -11,7 +11,7 @@ namespace _Project.Scripts.Architecture.Cards.Factories
     public class CardFactory : MonoBehaviour, ICardFactory
     {
         [SerializeField] private CardUI _cardPrefab;
-        private void Start()
+        private void Awake()
         {
            ServiceLocator.Register<ICardFactory>(this);
         }

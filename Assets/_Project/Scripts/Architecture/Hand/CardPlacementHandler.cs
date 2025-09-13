@@ -1,46 +1,31 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Cards.Runtime;
-using _Project.Scripts.Architecture.Grid.Core;
+using _Project.Scripts.Architecture.Core.Dependency_Injection;
+using _Project.Scripts.Architecture.Core.DropZones;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Hand
 {
-    /// <summary> Handles the placement of cards onto the grid. </summary>
     public class CardPlacementHandler: MonoBehaviour
     {
-        [SerializeField] private GridSystem _gridSystem;
-        
-        Camera _mainCamera;
-        Vector3 _eventDataPosition;
-        
-        private void Awake()
+        private DropZoneManager _dropZoneManager;
+
+        private void Start()
         {
-            _mainCamera = Camera.main;
+            _dropZoneManager ??= ServiceLocator.Get<DropZoneManager>();
             
-            if(_gridSystem == null)
-                Debug.LogError("GridSystem reference is not assigned in CardPlacementHandler.");
         }
 
         public async Task<bool> TryPlaceCard(CardUI card, Vector2 eventDataPosition)
         {
-            var worldPosition = _mainCamera.ScreenToWorldPoint(new Vector3(eventDataPosition.x, eventDataPosition.y, _mainCamera.nearClipPlane));
-            _eventDataPosition = new Vector3(worldPosition.x, worldPosition.y, 0);
-            _gridSystem.UnhighlightedCells();
-            _gridSystem.EnableTooltips(true);
-            return await _gridSystem.TryPlaceCardOnGrid(card, _eventDataPosition);
-        }
-
-
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(_eventDataPosition, 0.2f);
+            _dropZoneManager.EndDragPreview();
+            return await _dropZoneManager.TryDropCard(card, eventDataPosition);
         }
 
         public void StartPlacingCard(CardUI card)
         {
-            _gridSystem.HighlightSuitableCells(card);
-            _gridSystem.EnableTooltips(false);
+            _dropZoneManager.StartDragPreview(card);
         }
     }
 }

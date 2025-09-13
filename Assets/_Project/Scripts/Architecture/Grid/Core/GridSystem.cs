@@ -48,6 +48,7 @@ namespace _Project.Scripts.Architecture.Grid.Core
 
         private void Awake()
         {
+            ServiceLocator.Register(this);
             _components = new Dictionary<Type, IGridComponent>();
 
             _gridGenerator = GetComponent<IGridGenerator>();
@@ -60,7 +61,6 @@ namespace _Project.Scripts.Architecture.Grid.Core
 
         private void Start()
         {
-            ServiceLocator.Register(this);
             _gridGenerator?.GenerateGrid();
             _statsTooltipUI = ServiceLocator.Get<StatsTooltipUI>();
             if (_statsTooltipUI == null) Debug.LogError("StatsTooltipUI reference is not assigned in GridSystem.");

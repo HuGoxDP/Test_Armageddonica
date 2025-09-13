@@ -27,12 +27,12 @@ namespace _Project.Scripts.Architecture.Tooltip
 
        private void Awake()
        {
+           ServiceLocator.Register(this);
            _canvasGroup = GetComponent<CanvasGroup>();
        }
        
        private void Start()
        {
-           ServiceLocator.Register(this);
            HideTooltip();
        }
        

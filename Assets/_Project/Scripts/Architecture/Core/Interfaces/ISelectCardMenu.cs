@@ -1,4 +1,4 @@
-﻿namespace _Project.Scripts.Architecture.SelectCardMenu
+﻿namespace _Project.Scripts.Architecture.Core.Interfaces
 {
     public interface ISelectCardMenu
     {

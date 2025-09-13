@@ -19,10 +19,14 @@ namespace _Project.Scripts.Architecture.EffectApplicators
 
         private readonly Dictionary<StatType, HashSet<Entity>> _entitiesByStatType = new();
 
-        private void Start()
+        private void Awake()
         {
             ServiceLocator.Register<IEntityEffectManager>(this);
             
+        }
+
+        private void Start()
+        {
             if (_gridSystem == null) return;
             _gridSystem.OnEntityPlaced += UpdateStatCache;
             _gridSystem.OnEntityRemoved += UpdateStatCache;
