@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Enums;
@@ -11,13 +12,33 @@ namespace _Project.Scripts.Architecture.Grid.Components
         public bool IsEnabled { get; set; }
 
         private IGridContext _context;
+        private IGridInputSystem _gridInputSystem;
         private readonly HashSet<IGridCell> _suitableCells  = new();
         private IGridCell _lastHoveredCell;
+
+        private void OnDestroy()
+        {
+            if (_gridInputSystem != null)
+            {
+                _gridInputSystem.OnCellHoverEnter -= OnCellHoverEnter;
+                _gridInputSystem.OnCellHoverExit -= OnCellHoverExit;
+            }
+        }
 
         public void Initialize(IGridContext gridContext)
         {
             _context = gridContext;
             IsEnabled = true;
+        }
+
+        public void RegisterGridInputSystem(IGridInputSystem gridInputSystem)
+        {
+            _gridInputSystem = gridInputSystem;
+            if (_gridInputSystem != null)
+            {
+                _gridInputSystem.OnCellHoverEnter += OnCellHoverEnter;
+                _gridInputSystem.OnCellHoverExit += OnCellHoverExit;
+            }
         }
 
         public void HighlightSuitableCells(CardUI card)
@@ -36,12 +57,12 @@ namespace _Project.Scripts.Architecture.Grid.Components
                     var cell = cells[x, y];
                     if (_context.CanPlaceAt(card.CardData, cell))
                     {
-                        HighlightCell(cell, HighlightType.Valid);
+                        cell.HighlightCell(HighlightType.Valid);
                         _suitableCells.Add(cell);
                     }
                     else
                     {
-                        HighlightCell(cell, HighlightType.None);
+                        cell.HighlightCell(HighlightType.None);
                     }
                 }
             }
@@ -61,48 +82,39 @@ namespace _Project.Scripts.Architecture.Grid.Components
                 for (int y = 0; y < height; y++)
                 {
                     var cell = cells[x, y];
-                    ClearHighlight(cell);
+                    cell.HighlightCell(HighlightType.None);
                 }
             }
             
             _lastHoveredCell = null;
         }
         
-        public void HighlightCell(IGridCell cell, HighlightType highlightType)
-        {
-            if (!IsEnabled) return;
-            
-            cell.HighlightCell(highlightType);
-        }
-
-        public void ClearHighlight(IGridCell cell)
-        {
-            if (!IsEnabled) return;
-            
-            cell.HighlightCell(HighlightType.None);
-        }
-
         public void HighlightHoverCell(IGridCell cell)
         {
             if (!IsEnabled || cell == null) return;
-            if (!IsCellSuitable(cell)) return;
+            if (!_suitableCells.Contains(cell)) return;
 
             _lastHoveredCell = cell;
-            HighlightCell(cell, HighlightType.Hovered);
+            cell.HighlightCell(HighlightType.Hovered);
         }
         
         public void ClearHoverHighlight()
         {
             if (!IsEnabled || _lastHoveredCell == null) return;
-            if (!IsCellSuitable(_lastHoveredCell)) return;
+            if (!_suitableCells.Contains(_lastHoveredCell)) return;
             
-            HighlightCell(_lastHoveredCell, HighlightType.Valid);
+            _lastHoveredCell.HighlightCell(HighlightType.Valid);
             _lastHoveredCell = null;
         }
+
+        private void OnCellHoverEnter(IGridCell cell)
+        {   if (cell == null) return;
+            HighlightHoverCell(cell);
+        }
         
-        public bool IsCellSuitable(IGridCell cell)
+        private void OnCellHoverExit(IGridCell cell)
         {
-            return _suitableCells.Contains(cell);
+            ClearHoverHighlight();
         }
     }
 }

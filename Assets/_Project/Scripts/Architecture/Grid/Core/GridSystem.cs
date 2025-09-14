@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +9,7 @@ using _Project.Scripts.Architecture.Core.GameStates;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Entities.Base;
 using _Project.Scripts.Architecture.Enums;
-using _Project.Scripts.Architecture.Tooltip;
+using _Project.Scripts.Architecture.Grid.Components;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Grid.Core
@@ -35,26 +33,28 @@ namespace _Project.Scripts.Architecture.Grid.Core
         [SerializeField] private Vector2 _gridOffset;
         [SerializeField] private GridCell _cellPrefab;
 
+        private IGridTooltipManager _gridTooltipManager;
+        private IGridInputSystem _gridInputSystem;
         private IGridGenerator _gridGenerator;
         private IPlacementSystem _placementSystem;
         private IHighlightSystem _highlightSystem;
-        private IGridInputSystem _gridInputSystem;
         private Dictionary<Type, IGridComponent> _components;
 
         private IGridCell[,] _cells;
-        private StatsTooltipUI _statsTooltipUI;
         private bool _isGridGenerated;
-        private bool _isEnableTooltips = true;
+        
         private void Awake()
         {
             ServiceLocator.Register<IGridSystem>(this);
             
             _components = new Dictionary<Type, IGridComponent>();
 
+            _gridInputSystem = GetComponent<IGridInputSystem>();
             _gridGenerator = GetComponent<IGridGenerator>();
             _placementSystem = GetComponent<IPlacementSystem>();
             _highlightSystem = GetComponent<IHighlightSystem>();
-            _gridInputSystem = GetComponent<IGridInputSystem>();
+            _gridTooltipManager = GetComponent<GridTooltipManager>();
+            
 
             InitializeComponents();
         }
@@ -62,8 +62,6 @@ namespace _Project.Scripts.Architecture.Grid.Core
         private void Start()
         {
             _gridGenerator?.GenerateGrid();
-            _statsTooltipUI = ServiceLocator.Get<StatsTooltipUI>();
-            if (_statsTooltipUI == null) Debug.LogError("StatsTooltipUI reference is not assigned in GridSystem.");
         }
 
         protected override void OnDestroy()
@@ -163,9 +161,20 @@ namespace _Project.Scripts.Architecture.Grid.Core
             if (entities.Count == 0) return null;
             return entities;
         }
-
+        
+        public void EnableTooltips(bool isEnable)
+        {
+            _gridTooltipManager?.EnableTooltips(isEnable);;
+        }
+        
         private void InitializeComponents()
         {
+            if (_gridInputSystem != null)
+            {
+                _gridInputSystem.Initialize(this);
+                _components.Add(typeof(IGridInputSystem), _gridInputSystem);
+            }
+            
             if (_gridGenerator != null)
             {
                 _gridGenerator.Initialize(this);
@@ -186,58 +195,18 @@ namespace _Project.Scripts.Architecture.Grid.Core
             if (_highlightSystem != null)
             {
                 _highlightSystem.Initialize(this);
+                _highlightSystem.RegisterGridInputSystem(_gridInputSystem);
                 _components.Add(typeof(IHighlightSystem), _highlightSystem);
             }
 
-            if (_gridInputSystem != null)
+            if (_gridTooltipManager != null)
             {
-                _gridInputSystem.Initialize(this);
-                _components.Add(typeof(IGridInputSystem), _gridInputSystem);
-                
-                _gridInputSystem.OnCellHoverEnter += OnCellHoverEnter;
-                _gridInputSystem.OnCellHoverExit += OnCellHoverExit;
+                _gridTooltipManager.Initialize(this);
+                _gridTooltipManager.RegisterGridInputSystem(_gridInputSystem);
+                _components.Add(typeof(IGridTooltipManager), _gridTooltipManager);
             }
         }
-
-        private void OnCellHoverEnter(IGridCell cell)
-        {   if (cell == null) return;
-            
-            //hoverLogic
-            _highlightSystem.HighlightHoverCell(cell);
-            
-            //tooltip logic
-            if(_statsTooltipUI == null) return;
-            if (cell.IsOccupied && _isEnableTooltips)
-            {
-                _statsTooltipUI.ShowTooltip();
-                _statsTooltipUI.SetTooltip(cell.OccupiedEntity);
-            }
-        }
-
-        private void OnCellHoverExit(IGridCell cell)
-        {
-            //hoverLogic
-            _highlightSystem.ClearHoverHighlight();
-            
-            //tooltip logic
-            if(_statsTooltipUI == null) return;
-            _statsTooltipUI.HideTooltip();
-        }
-
-        public void EnableTooltips(bool isEnable)
-        {
-            if(_statsTooltipUI == null) return;
-            if (isEnable)
-            {
-                _isEnableTooltips = true;
-            }
-            else
-            {
-                _isEnableTooltips = false;
-                _statsTooltipUI.HideTooltip();
-            }
-        }
-
+        
         private void OnGridGenerated(object sender, IGridCell[,] e)
         {
             _cells = e;
@@ -257,13 +226,11 @@ namespace _Project.Scripts.Architecture.Grid.Core
             }
         }
         
-
         protected override void OnGameStateChanged(object sender, GameState newState)
         {
             EnableTooltips(newState == GameState.CardPlacementTurn);
         }
-
-
+        
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using _Project.Scripts.Architecture.Core.Interfaces;
+using _Project.Scripts.Architecture.Grid.Core;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Grid.Components
@@ -7,8 +8,16 @@ namespace _Project.Scripts.Architecture.Grid.Components
     public class StandardGridGenerator : MonoBehaviour, IGridGenerator
     {
         public event EventHandler<IGridCell[,]> OnGridGenerated;
-
         public bool IsEnabled { get; set; }
+     
+        
+        [Header("Grid Configuration")] 
+        [SerializeField] private int _width;
+        [SerializeField] private int _height;
+        [SerializeField] private float _cellSize;
+        [SerializeField] private Vector2 _gridOffset;
+        [SerializeField] private GridCell _cellPrefab;
+        
         private IGridContext _context;
         
         public void Initialize(IGridContext gridContext)
