@@ -15,18 +15,18 @@ namespace _Project.Scripts.Architecture.EffectApplicators
 {
     public class EntityEffectManager : GameControllable, IEntityEffectManager
     {
-        [SerializeField] private GridSystem _gridSystem;
+        private IGridSystem _gridSystem;
 
         private readonly Dictionary<StatType, HashSet<Entity>> _entitiesByStatType = new();
 
         private void Awake()
         {
             ServiceLocator.Register<IEntityEffectManager>(this);
-            
         }
 
         private void Start()
         {
+            _gridSystem = ServiceLocator.Get<IGridSystem>();
             if (_gridSystem == null) return;
             _gridSystem.OnEntityPlaced += UpdateStatCache;
             _gridSystem.OnEntityRemoved += UpdateStatCache;

@@ -10,7 +10,7 @@ namespace _Project.Scripts.Architecture.Core.DropZones
 {
     public class GridDropZone : MonoBehaviour, IDropZone
     {
-        private GridSystem _gridSystem;
+        private IGridSystem _gridSystem;
         private Camera _mainCamera;
         private VFXManager.VFXManager _vfxManager;
 
@@ -22,7 +22,7 @@ namespace _Project.Scripts.Architecture.Core.DropZones
         private void Start()
         {
             ServiceLocator.Get<DropZoneManager>().RegisterDropZone(this);
-            _gridSystem = ServiceLocator.Get<GridSystem>();
+            _gridSystem = ServiceLocator.Get<IGridSystem>();
             _vfxManager = ServiceLocator.Get<VFXManager.VFXManager>();
         }
 

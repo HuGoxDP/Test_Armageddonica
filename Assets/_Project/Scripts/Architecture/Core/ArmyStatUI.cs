@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Architecture.Grid.Core;
+﻿using _Project.Scripts.Architecture.Core.Interfaces;
+using _Project.Scripts.Architecture.Grid.Core;
 using TMPro;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace _Project.Scripts.Architecture.Core
     {
         [SerializeField] private TextMeshProUGUI _text;
 
-        public void CalculateStrength(GridSystem gridSystem)
+        public void CalculateStrength(IGridSystem gridSystem)
         {
             float armyStrength = 0;
             foreach (var cell in gridSystem.Cells)

@@ -9,11 +9,11 @@ namespace _Project.Scripts.Architecture.Core.Interfaces
         Vector2Int GridSize { get; }
         Vector2 GridOffset { get; }
         float CellSize { get; }
-        Transform GridTransform { get; }
-        IGridCell[,] Cells { get; }
+        public Transform GridTransform { get; }
+        public IGridCell[,] Cells { get; }
         GridCell CellPrefab { get; }
-        
-        bool CanPlaceAt(BaseCardData cardData, IGridCell cell);
-        bool TryGetCell(Vector3 position, out IGridCell cell);
+
+        public bool CanPlaceAt(BaseCardData cardData, IGridCell cell);
+        public bool TryGetCell(Vector3 position, out IGridCell cell);
     }
 }

@@ -47,7 +47,8 @@ namespace _Project.Scripts.Architecture.Grid.Core
         private bool _isEnableTooltips = true;
         private void Awake()
         {
-            ServiceLocator.Register(this);
+            ServiceLocator.Register<IGridSystem>(this);
+            
             _components = new Dictionary<Type, IGridComponent>();
 
             _gridGenerator = GetComponent<IGridGenerator>();
