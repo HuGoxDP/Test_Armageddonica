@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Entities.Base;
 using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Grid;
-using _Project.Scripts.Architecture.Grid.Core;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Core.Interfaces

@@ -1,6 +1,5 @@
 ﻿using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Core.Interfaces;
-using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Grid.Validators
 {

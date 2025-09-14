@@ -45,7 +45,6 @@ namespace _Project.Scripts.Architecture.Grid.Core
         private StatsTooltipUI _statsTooltipUI;
         private bool _isGridGenerated;
         private bool _isEnableTooltips = true;
-
         private void Awake()
         {
             ServiceLocator.Register(this);
@@ -99,7 +98,7 @@ namespace _Project.Scripts.Architecture.Grid.Core
         {
             if (!_isGridGenerated || _placementSystem == null) 
                 return false;
-
+            
             return await _placementSystem.TryPlaceCard(card.CardData, worldPosition);
         }
 

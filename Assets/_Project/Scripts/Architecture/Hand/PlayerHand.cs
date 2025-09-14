@@ -32,18 +32,22 @@ namespace _Project.Scripts.Architecture.Hand
         private int _originalDraggedCardSiblingIndex;
         private CardUI _hoveredCard;
         private bool _isCardDragging;
-        
+        private Camera _camera;
+
+        private GameObject _dustEffect; 
+        private VFXManager.VFXManager _vfxManager;
         private void Awake()
         {
             ServiceLocator.Register<IPlayerHand>(this);
             _cards = new List<CardUI>();
             _layoutController.Initialize(new LinearLayoutStrategy());
+            _camera = Camera.main;
         }
        
         private void Start()
         {
             _cardFactory ??= ServiceLocator.Get<ICardFactory>();
-
+            _vfxManager ??= ServiceLocator.Get<VFXManager.VFXManager>();
         }
 
         protected override void OnDestroy()
@@ -115,7 +119,9 @@ namespace _Project.Scripts.Architecture.Hand
                 interactionHandler.OnCardDragEnded -= OnCardDraggedEnded;
                 interactionHandler.OnCardHovered -= OnCardHovered;
             }
-
+        
+            _vfxManager.ReturnEffectToPool(_dustEffect, "Dust_HoverCard");
+            
             _cards.Remove(card);
             _layoutController.RemoveCard(card.transform);
             OnCardRemoved?.Invoke(this, card);
@@ -143,14 +149,21 @@ namespace _Project.Scripts.Architecture.Hand
                 _originalDraggedCardCanvasGroup.blocksRaycasts = false;
                 _originalDraggedCardCanvasGroup.alpha = 0.5f;
             }
+            
+            if (_hoveredCard != null)
+            {
+                _vfxManager.ReturnEffectToPool(_dustEffect, "Dust_HoverCard");
+            }
+            
             _cardPlacementHandler.StartPlacingCard(card);
         }
 
         private void OnCardDragged(object sender, DragEventArgs e)
         {
             var card = e.Card;
-            var newPosition = e.EventData.position;
-            card.transform.position = newPosition;
+            var cardRect = card.transform as RectTransform;
+            RectTransformUtility.ScreenPointToWorldPointInRectangle(cardRect, e.EventData.position, _camera, out var worldPosition);
+            card.transform.position = worldPosition;
         }
         
         private async void OnCardDraggedEnded(object sender, DragEventArgs e)
@@ -168,7 +181,7 @@ namespace _Project.Scripts.Architecture.Hand
                     _originalDraggedCardCanvasGroup.blocksRaycasts = true;
                     _originalDraggedCardCanvasGroup.alpha = 1f;
                 }
-
+                card.gameObject.SetActive(false);
                 var placed = await _cardPlacementHandler.TryPlaceCard(card, e.EventData.position);
                 if (placed)
                 {
@@ -182,7 +195,11 @@ namespace _Project.Scripts.Architecture.Hand
                     MatchController.NextTurn();
                     return;
                 }
-
+                card.gameObject.SetActive(true);
+                if (_hoveredCard)
+                {
+                    _dustEffect = _vfxManager.PlayEffect("Dust_HoverCard", _hoveredCard.transform.position, Quaternion.identity, 0, true);
+                }
                 _isCardDragging = false;
                 _layoutController.UpdateHoverLayout(GetCardIndex(card));
                 _originalDraggedCardCanvasGroup = null;
@@ -200,6 +217,16 @@ namespace _Project.Scripts.Architecture.Hand
         {
             if (_isCardDragging) return;
             if (_hoveredCard != null && _hoveredCard == e) return;
+
+            if (_hoveredCard != null)
+            {
+                _vfxManager.ReturnEffectToPool(_dustEffect, "Dust_HoverCard");
+            }
+            
+            if (e != null)
+            {
+                _dustEffect = _vfxManager.PlayEffect("Dust_HoverCard", e.transform.position, Quaternion.identity, 0, true);
+            }
             _hoveredCard = e;
             _layoutController.UpdateHoverLayout(GetCardIndex(e));
         }

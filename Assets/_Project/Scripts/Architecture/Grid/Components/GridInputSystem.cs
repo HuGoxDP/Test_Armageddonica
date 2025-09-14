@@ -1,7 +1,6 @@
 ﻿using System;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace _Project.Scripts.Architecture.Grid.Components
 {

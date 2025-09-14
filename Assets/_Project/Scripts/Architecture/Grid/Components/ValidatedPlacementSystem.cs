@@ -4,11 +4,8 @@ using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Core.Interfaces;
-using _Project.Scripts.Architecture.Entities;
 using _Project.Scripts.Architecture.Enums;
-using _Project.Scripts.Architecture.Grid.Core;
 using _Project.Scripts.Architecture.Grid.Validators;
-using _Project.Scripts.Architecture.Spell;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Grid.Components

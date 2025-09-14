@@ -1,13 +1,10 @@
 ﻿using System;
-using _Project.Scripts.Architecture.Cards.Data;
-using _Project.Scripts.Architecture.Cards.Deck;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.EffectApplicators;
 using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Grid.Core;
 using _Project.Scripts.Architecture.Hand;
 using _Project.Scripts.Architecture.SelectCardMenu;
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Core.GameStates
@@ -30,6 +27,15 @@ namespace _Project.Scripts.Architecture.Core.GameStates
         {
             UpdateGameState(GameState.Initializing);
         }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+        }
+
         private void InitializeGame()
         {
             _playerHolder.SetMatchController(this);
@@ -66,6 +72,27 @@ namespace _Project.Scripts.Architecture.Core.GameStates
             
             OnGameStateChanged?.Invoke(this, _state);
         }
+        
+        public void NextTurn()
+        {
+            switch (_state)
+            {
+                case GameState.Initializing:
+                    UpdateGameState(GameState.CardSelectionTurn);
+                    break;
+                case GameState.CardSelectionTurn:
+                    UpdateGameState(GameState.CardPlacementTurn);
+                    break;
+                case GameState.CardPlacementTurn:
+                    UpdateGameState(GameState.BuffTurn);
+                    break;
+                case GameState.BuffTurn:
+                    UpdateGameState(GameState.CardSelectionTurn);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         private void GenerateCards()
         {
@@ -96,27 +123,6 @@ namespace _Project.Scripts.Architecture.Core.GameStates
             catch (Exception e)
             {
                 Debug.LogException(e);
-            }
-        }
-
-        public void NextTurn()
-        {
-            switch (_state)
-            {
-                case GameState.Initializing:
-                    UpdateGameState(GameState.CardSelectionTurn);
-                    break;
-                case GameState.CardSelectionTurn:
-                    UpdateGameState(GameState.CardPlacementTurn);
-                    break;
-                case GameState.CardPlacementTurn:
-                    UpdateGameState(GameState.BuffTurn);
-                    break;
-                case GameState.BuffTurn:
-                    UpdateGameState(GameState.CardSelectionTurn);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
         

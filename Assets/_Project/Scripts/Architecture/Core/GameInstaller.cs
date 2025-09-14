@@ -1,5 +1,4 @@
-﻿using System;
-using _Project.Scripts.Architecture.Core.Dependency_Injection;
+﻿using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Entities.Base;
 using UnityEngine;
 

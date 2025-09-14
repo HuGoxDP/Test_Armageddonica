@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Entities.Base;
 using _Project.Scripts.Architecture.Enums;

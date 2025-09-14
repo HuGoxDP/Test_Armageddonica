@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Core.Interfaces;
@@ -11,6 +12,7 @@ namespace _Project.Scripts.Architecture.Core.DropZones
     {
         private GridSystem _gridSystem;
         private Camera _mainCamera;
+        private VFXManager.VFXManager _vfxManager;
 
         private void Awake()
         {
@@ -21,8 +23,14 @@ namespace _Project.Scripts.Architecture.Core.DropZones
         {
             ServiceLocator.Get<DropZoneManager>().RegisterDropZone(this);
             _gridSystem = ServiceLocator.Get<GridSystem>();
+            _vfxManager = ServiceLocator.Get<VFXManager.VFXManager>();
         }
-        
+
+        private void OnDestroy()
+        {
+            ServiceLocator.Get<DropZoneManager>()?.UnregisterDropZone(this);
+        }
+
         public bool CanAcceptCard(CardUI card)
         {
             return true;
@@ -35,7 +43,31 @@ namespace _Project.Scripts.Architecture.Core.DropZones
             
             _gridSystem.UnhighlightedCells();
             _gridSystem.EnableTooltips(true);
-            return await _gridSystem.TryPlaceCardOnGrid(card, position);
+            
+            var isPlaced = await _gridSystem.TryPlaceCardOnGrid(card, position);
+            if (!isPlaced)
+                return false;
+            
+            if(_gridSystem.TryGetCell(worldPosition, out var cellAtPosition))
+            { 
+                PlayPlaceEffect(cellAtPosition);
+            }
+            await Task.Delay(300);
+            return true;
+        }
+
+        private async void PlayPlaceEffect(IGridCell cellAtPosition)
+        {
+            try
+            {
+                var effect = _vfxManager.PlayEffect("Smoke_PlaceCard", cellAtPosition.GameObject.transform.position, Quaternion.identity);
+                await Task.Delay(500);
+                _vfxManager.ReturnEffectToPool(effect,"Smoke_PlaceCard");
+            }
+            catch (Exception e)
+            {
+                 Debug.LogException(e);
+            }
         }
 
         public void StartDragPreview(CardUI card)

@@ -17,8 +17,8 @@ namespace _Project.Scripts.Architecture.Entities.Base
     [Serializable]
     public class StatScalingEffectData
     {
-        [field: SerializeField] public StatType ScalableStatType { get; protected set; }// будущая сила
-        [field: SerializeField] public StatType MultiplierStatType  { get; protected set; } // кол-во юнитов
+        [field: SerializeField] public StatType ScalableStatType { get; protected set; }
+        [field: SerializeField] public StatType MultiplierStatType  { get; protected set; }
         [field: SerializeField] public StatValueSource MultiplierValueSource  { get; protected set; }
         
         public StatValueSource ScalableBaseValueSource  =>  StatValueSource.Base;

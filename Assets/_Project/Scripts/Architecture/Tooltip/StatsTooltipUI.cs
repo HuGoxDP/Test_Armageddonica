@@ -19,16 +19,21 @@ namespace _Project.Scripts.Architecture.Tooltip
        [SerializeField] private float _maxHeight = 800f;
        [SerializeField] private Vector2 _padding = new Vector2(10, 10);
        [SerializeField] private float _verticalSpacing = 5f;
-       
+
        private Entity _entity;
        private CanvasGroup _canvasGroup;
        private Tween _tween;
        private bool _isEnable = true; 
+       
+       private RectTransform _tooltipRect;
+       private Camera _camera;
 
        private void Awake()
        {
            ServiceLocator.Register(this);
            _canvasGroup = GetComponent<CanvasGroup>();
+           _tooltipRect = GetComponent<RectTransform>();
+           _camera = Camera.main;
        }
        
        private void Start()
@@ -49,10 +54,10 @@ namespace _Project.Scripts.Architecture.Tooltip
        private void Update()
        {
            if (_canvasGroup.alpha <= 0.1) return;
-
-           
            var position = Input.mousePosition;
-           transform.position = position + new Vector3(10, 0);
+
+           RectTransformUtility.ScreenPointToWorldPointInRectangle(_tooltipRect, position + new Vector3(10, 0), _camera, out var worldPosition);
+           transform.position = worldPosition;
        }
 
        public void HideTooltip()

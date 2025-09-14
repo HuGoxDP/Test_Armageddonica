@@ -9,7 +9,6 @@ using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Enums;
 using _Project.Scripts.Architecture.Hand;
 using _Project.Scripts.Architecture.Layout;
-using _Project.Scripts.Architecture.Tooltip;
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.SelectCardMenu

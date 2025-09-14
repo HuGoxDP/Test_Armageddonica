@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Cards.Runtime;
 using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Core.Interfaces;
@@ -19,6 +18,11 @@ namespace _Project.Scripts.Architecture.Core.DropZones
         private void Start()
         {
             ServiceLocator.Get<DropZoneManager>().RegisterDropZone(this);
+        }
+        
+        private void OnDestroy()
+        {
+            ServiceLocator.Get<DropZoneManager>()?.UnregisterDropZone(this);
         }
         
         public bool CanAcceptCard(CardUI card)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _Project.Scripts.Architecture.Cards.Data;
 using _Project.Scripts.Architecture.Enums;
 using UnityEngine;

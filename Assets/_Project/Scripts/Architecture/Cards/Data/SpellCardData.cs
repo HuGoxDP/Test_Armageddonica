@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Enums;
-using _Project.Scripts.Editor;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace _Project.Scripts.Architecture.Cards.Data

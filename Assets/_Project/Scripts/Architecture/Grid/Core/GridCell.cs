@@ -1,11 +1,7 @@
-﻿using System;
-using _Project.Scripts.Architecture.Core.Dependency_Injection;
-using _Project.Scripts.Architecture.Core.Interfaces;
+﻿using _Project.Scripts.Architecture.Core.Interfaces;
 using _Project.Scripts.Architecture.Entities.Base;
 using _Project.Scripts.Architecture.Enums;
-using _Project.Scripts.Architecture.Tooltip;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace _Project.Scripts.Architecture.Grid.Core
 {
@@ -38,13 +34,13 @@ namespace _Project.Scripts.Architecture.Grid.Core
             _gridHighlight.drawMode = SpriteDrawMode.Sliced;
             _gridHighlight.size = new Vector2(cellSize - 1, cellSize - 1);
             
-            var collider = GetComponent<BoxCollider2D>();
-            if (collider == null)
+            var boxCollider2D = GetComponent<BoxCollider2D>();
+            if (boxCollider2D == null)
             {
-                collider = gameObject.AddComponent<BoxCollider2D>();
+                boxCollider2D = gameObject.AddComponent<BoxCollider2D>();
             }
-            collider.size = _gridHighlight.size;
-            collider.isTrigger = true;
+            boxCollider2D.size = _gridBody.size;
+            boxCollider2D.isTrigger = true;
         }
         
         public void SetEntity(Entity entity)

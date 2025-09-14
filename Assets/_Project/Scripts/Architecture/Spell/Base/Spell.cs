@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _Project.Scripts.Architecture.Core.Dependency_Injection;
 using _Project.Scripts.Architecture.Core.Interfaces;
-using _Project.Scripts.Architecture.EffectApplicators;
 using _Project.Scripts.Architecture.Entities.Base;
 using UnityEngine;
 
